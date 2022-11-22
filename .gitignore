@@ -22,3 +22,9 @@ ehthumbs_vista.db
 # Visual Studio Code
 .vscode/
 .history/
+
+# Dependencies
+node_modules/
+
+# Compiled project files
+dist/
