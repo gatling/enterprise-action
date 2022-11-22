@@ -1,0 +1,5 @@
+name: 'GitHub Enterprise Action'
+description: '[WORK IN PROGRESS] Run your load tests on Gatling Enterprise straight from your GitHub Action CI/CD workflows.'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
