@@ -1,0 +1,35 @@
+name: Run Gatling Enterprise Action
+
+on:
+  workflow_dispatch:
+    inputs:
+      milliseconds:
+        type: number
+        required: true
+        default: 1000
+      fail:
+        type: boolean
+        required: true
+        default: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          yarn ci
+          yarn package
+
+      - name: Gatling Enterprise Action
+        id: enterprise-action
+        uses: ./
+        with:
+          milliseconds: ${{ inputs.milliseconds }}
+          fail: ${{ inputs.fail }}
+
+      - name: Print output
+        run: echo "Result message = ${{ steps.enterprise-action.outputs.result }}"
