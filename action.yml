@@ -1,5 +1,17 @@
 name: 'GitHub Enterprise Action'
 description: '[WORK IN PROGRESS] Run your load tests on Gatling Enterprise straight from your GitHub Action CI/CD workflows.'
+inputs:
+  milliseconds:
+    description: 'number of milliseconds to wait'
+    required: true
+    default: '1000'
+  fail:
+    description: 'whether or not the action will fail'
+    required: true
+    default: 'true'
+outputs:
+  result:
+    description: 'An output message'
 runs:
   using: 'node16'
   main: 'dist/index.js'
