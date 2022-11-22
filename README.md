@@ -18,7 +18,7 @@ Build the project:
 yarn package
 ```
 
-Run locally:
+Run locally (input can be passed with environment variables, e.g. use `INPUT_FOO` for the input named `foo`):
 
 ```shell
 yarn start
