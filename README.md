@@ -29,3 +29,9 @@ Run tests:
 ```shell
 yarn test
 ```
+
+Format code::
+
+```shell
+yarn format
+```
