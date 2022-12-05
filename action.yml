@@ -1,14 +1,24 @@
 name: 'GitHub Enterprise Action'
 description: '[WORK IN PROGRESS] Run your load tests on Gatling Enterprise straight from your GitHub Action CI/CD workflows.'
 inputs:
-  milliseconds:
-    description: 'number of milliseconds to wait'
+  gatling_enterprise_url:
+    description: 'URL of your Gatling Enterprise server (needed only for self-hosted instances).'
+    required: false
+    default: 'https://cloud.gatling.io'
+  api_token:
+    description: 'A Gatling Enterprise API token with at least Start permission (we recommend storing it securely using GitHub''s encrypted secrets; see https://docs.github.com/en/actions/security-guides/encrypted-secrets#using-encrypted-secrets-in-a-workflow).'
     required: true
-    default: '1000'
-  fail:
-    description: 'whether or not the action will fail'
+  simulation_id:
+    description: 'The ID of the simulation to run.'
     required: true
-    default: 'true'
+  extra_system_properties:
+    description: 'Additional Java system properties, will be merged with the simulation''s configured system properties. Must be formatted as a JSON object, e.g. {"MySysProp":"Some value"}.'
+    required: false
+  extra_environment_variables:
+    description: 'Additional environment variables, will be merged with the simulation''s configured environment variables. Must be formatted as a JSON object, e.g. {"MY_ENV_VAR":"Some value"}.'
+    required: false
+  override_load_generators:
+    description: 'Overrides the simulation''s load generators configuration. Must be formatted as a JSON object, e.g. {"4a399023-d443-3a58-864f-3919760df78b":{"size":1,"weight":60},"c800b6d9-163b-3db7-928f-86c1470a9542":{"size":1,"weight":40}} (weights are optional).'
 outputs:
   result:
     description: 'An output message'

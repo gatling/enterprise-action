@@ -1,13 +1,17 @@
-import { apiClient } from "../../src/client/apiClient";
+import { apiClient, ApiClientConfig } from "../../src/client/apiClient";
 import nock from "nock";
 import { expect, test } from "@jest/globals";
 import { StartSimulationResponse } from "../../src/client/responses/startSimulationResponse";
 import { HttpClientError } from "@actions/http-client";
 
-const client = apiClient();
+const config: ApiClientConfig = {
+  baseUrl: "https://cloud.gatling.io/api/public",
+  apiToken: "my-token"
+};
+const client = apiClient(config);
 
 const simulation_id = "3e5d7e20-53c2-40ba-b0a2-0b0d93b33287";
-const simulation_start_expected_url = `/api/public/simulations/start?simulation=${simulation_id}`;
+const simulation_start_expected_path = `/simulations/start?simulation=${simulation_id}`;
 
 const successfulStartedSimulationResponse: StartSimulationResponse = {
   className: "computerdatabase.ComputerDatabaseSimulation",
@@ -22,14 +26,14 @@ const unauthorizedResponse = {
 };
 
 test("startSimulation success", async () => {
-  nock("https://cloud.gatling.io").post(simulation_start_expected_url).reply(200, successfulStartedSimulationResponse);
+  nock(config.baseUrl).post(simulation_start_expected_path).reply(200, successfulStartedSimulationResponse);
 
   const actualResponse = await client.startSimulation(simulation_id);
   expect(actualResponse).toStrictEqual(successfulStartedSimulationResponse);
 });
 
 test("startSimulation unauthorized error", async () => {
-  nock("https://cloud.gatling.io").post(simulation_start_expected_url).reply(401, unauthorizedResponse);
+  nock(config.baseUrl).post(simulation_start_expected_path).reply(401, unauthorizedResponse);
 
   const request = client.startSimulation(simulation_id);
   await expect(request).rejects.toStrictEqual(
@@ -41,7 +45,7 @@ test("startSimulation unauthorized error", async () => {
 });
 
 test("startSimulation not found error", async () => {
-  nock("https://cloud.gatling.io").post(simulation_start_expected_url).reply(404);
+  nock(config.baseUrl).post(simulation_start_expected_path).reply(404);
 
   const request = client.startSimulation(simulation_id);
   await expect(request).rejects.toStrictEqual(new HttpClientError("Unexpected empty response", 404));

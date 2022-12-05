@@ -9,6 +9,11 @@ import { SeriesResponse } from "./responses/seriesResponse";
 import { RequestsSummaryResponse } from "./responses/requestsSummaryResponse";
 import { OutgoingHttpHeaders } from "http";
 
+export interface ApiClientConfig {
+  baseUrl: string;
+  apiToken: string;
+}
+
 export interface ApiClient {
   startSimulation: (simulationId: string, options?: StartSimulationRequest) => Promise<StartSimulationResponse>;
   getRunInformation: (runId: string) => Promise<RunInformationResponse>;
@@ -18,13 +23,8 @@ export interface ApiClient {
   getRequestsSummary: (runId: string) => Promise<RequestsSummaryResponse>;
 }
 
-export const apiClient = (): ApiClient => {
+export const apiClient = (conf: ApiClientConfig): ApiClient => {
   const client = new http.HttpClient();
-  const conf: HttpConf = {
-    // TODO RND-5 configurable
-    baseUrl: "https://cloud.gatling.io/api/public",
-    apiToken: ""
-  };
   return {
     startSimulation: (simulationId, options) =>
       postJson(client, conf, "/simulations/start", options ?? {}, { simulation: simulationId }),
@@ -35,11 +35,6 @@ export const apiClient = (): ApiClient => {
     getRequestsSummary: (runId) => getJson(client, conf, "/summaries/requests", { run: runId })
   };
 };
-
-interface HttpConf {
-  baseUrl: string;
-  apiToken: string;
-}
 
 const seriesParams = (runId: string, scenario: string) => ({
   run: runId,
@@ -53,22 +48,22 @@ const seriesParams = (runId: string, scenario: string) => ({
 
 const getJson = async <T>(
   client: http.HttpClient,
-  conf: HttpConf,
+  conf: ApiClientConfig,
   path: string,
   params?: Record<string, string>
 ): Promise<T> => client.getJson<T>(buildUrl(conf, path, params), headers(conf)).then(handleJsonResponse);
 
 const postJson = async <T>(
   client: http.HttpClient,
-  conf: HttpConf,
+  conf: ApiClientConfig,
   path: string,
   payload: any,
   params?: Record<string, string>
 ): Promise<T> => client.postJson<T>(buildUrl(conf, path, params), payload, headers(conf)).then(handleJsonResponse);
 
-const headers = (conf: HttpConf): OutgoingHttpHeaders => ({ Authorization: conf.apiToken });
+const headers = (conf: ApiClientConfig): OutgoingHttpHeaders => ({ Authorization: conf.apiToken });
 
-const buildUrl = (conf: HttpConf, path: string, queryParams?: Record<string, string>): string => {
+const buildUrl = (conf: ApiClientConfig, path: string, queryParams?: Record<string, string>): string => {
   const resourceUrl = conf.baseUrl + path;
   const url = new URL(resourceUrl);
   if (queryParams) {
