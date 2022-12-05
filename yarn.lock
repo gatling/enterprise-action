@@ -1165,6 +1165,11 @@ human-signals@^2.1.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
+idonttrustlikethat@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/idonttrustlikethat/-/idonttrustlikethat-2.1.0.tgz#657300b6838f1798ab74f79e72e1108d0304e5da"
+  integrity sha512-WXiWntC19mYSULxHkPiyA3mp2JLFKKmLYvUNyKwcYafgvH4tqQSeb5XfmN3IE4hTQNGzu1AViNnPt0Z8w5FEPQ==
+
 import-local@^3.0.2:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/import-local/-/import-local-3.1.0.tgz#b4479df8a5fd44f6cdce24070675676063c95cb4"

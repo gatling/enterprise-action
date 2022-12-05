@@ -3,14 +3,18 @@ name: Run Gatling Enterprise Action
 on:
   workflow_dispatch:
     inputs:
-      milliseconds:
-        type: number
+      simulation_id:
+        type: string
         required: true
-        default: 1000
-      fail:
-        type: boolean
-        required: true
-        default: true
+      extra_system_properties:
+        type: string
+        required: false
+      extra_environment_variables:
+        type: string
+        required: false
+      override_load_generators:
+        type: string
+        required: false
 
 jobs:
   run:
@@ -28,8 +32,11 @@ jobs:
         id: enterprise-action
         uses: ./
         with:
-          milliseconds: ${{ inputs.milliseconds }}
-          fail: ${{ inputs.fail }}
+          api_token: ${{ secrets.TEST_CLOUD_PROD_GATLING_CORP_START_API_TOKEN }}
+          simulation_id: ${{ inputs.simulation_id }}
+          extra_system_properties: ${{ inputs.extra_system_properties }}
+          extra_environment_variables: ${{ inputs.extra_environment_variables }}
+          override_load_generators: ${{ inputs.override_load_generators }}
 
       - name: Print output
         run: echo "Result message = ${{ steps.enterprise-action.outputs.result }}"

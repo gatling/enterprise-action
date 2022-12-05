@@ -30,7 +30,7 @@ Run tests:
 yarn test
 ```
 
-Format code::
+Format code:
 
 ```shell
 yarn format
