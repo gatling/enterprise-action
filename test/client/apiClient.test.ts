@@ -12,6 +12,7 @@ const client = apiClient(config);
 
 const simulation_id = "3e5d7e20-53c2-40ba-b0a2-0b0d93b33287";
 const simulation_start_expected_path = `/simulations/start?simulation=${simulation_id}`;
+const check_compatibility_expected_path = "/compatibility?clientName=gatling-enterprise-github-action&version=0.0.1";
 
 const successfulStartedSimulationResponse: StartSimulationResponse = {
   className: "computerdatabase.ComputerDatabaseSimulation",
@@ -49,4 +50,21 @@ test("startSimulation not found error", async () => {
 
   const request = client.startSimulation(simulation_id);
   await expect(request).rejects.toStrictEqual(new HttpClientError("Unexpected empty response", 404));
+});
+
+test("checkCloudCompatibility success", () => {
+  nock(config.baseUrl).get(check_compatibility_expected_path).reply(200);
+  return client.checkCloudCompatibility();
+});
+
+test("checkCloudCompatibility not found error (ignored)", () => {
+  nock(config.baseUrl).get(check_compatibility_expected_path).reply(404);
+  return client.checkCloudCompatibility();
+});
+
+test("checkCloudCompatibility error", async () => {
+  nock(config.baseUrl).get(check_compatibility_expected_path).reply(400);
+
+  const request = client.checkCloudCompatibility();
+  await expect(request).rejects.toBeDefined();
 });
