@@ -39,4 +39,10 @@ jobs:
           override_load_generators: ${{ inputs.override_load_generators }}
 
       - name: Print output
-        run: echo "Result message = ${{ steps.enterprise-action.outputs.result }}"
+        run: |
+          echo "run_id=${{ steps.enterprise-action.outputs.run_id }}"
+          echo "reports_url=${{ steps.enterprise-action.outputs.reports_url }}"
+          echo "runs_url=${{ steps.enterprise-action.outputs.runs_url }}"
+          echo "runs_status_code=${{ steps.enterprise-action.outputs.runs_status_code }}"
+          echo "runs_status_name=${{ steps.enterprise-action.outputs.runs_status_name }}"
+          echo "run_assertions=${{ steps.enterprise-action.outputs.run_assertions }}"

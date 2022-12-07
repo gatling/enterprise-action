@@ -3,6 +3,7 @@ import { ApiClientConfig } from "./client/apiClient";
 import { string, dictionary, object, number, Validator, Ok, Err, Result } from "idonttrustlikethat";
 
 export interface ActionConfig {
+  gatlingEnterpriseUrl: string;
   api: ApiClientConfig;
   run: RunConfig;
 }
@@ -20,17 +21,16 @@ export interface LoadGeneratorConfiguration {
 }
 
 export const readConfig = (): ActionConfig => {
-  const config = { api: getApiConfig(), run: getRunConfig() };
+  const gatlingEnterpriseUrl = getGatlingEnterpriseUrlConfig();
+  const config = { gatlingEnterpriseUrl, api: getApiConfig(gatlingEnterpriseUrl), run: getRunConfig() };
   core.debug("Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run }));
   return config;
 };
 
-const getApiConfig = (): ApiClientConfig => {
-  const gatlingEnterpriseUrl = getValidatedInput(
-    "gatling_enterprise_url",
-    requiredInputValidation,
-    "gatling_enterprise_url is required"
-  );
+const getGatlingEnterpriseUrlConfig = (): string =>
+  getValidatedInput("gatling_enterprise_url", requiredInputValidation, "gatling_enterprise_url is required");
+
+const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
   const apiToken = getValidatedInput("api_token", requiredInputValidation, "api_token is required");
   return {
     baseUrl: `${gatlingEnterpriseUrl}/api/public`,

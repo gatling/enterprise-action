@@ -20,8 +20,18 @@ inputs:
   override_load_generators:
     description: 'Overrides the simulation''s load generators configuration. Must be formatted as a JSON object, e.g. {"4a399023-d443-3a58-864f-3919760df78b":{"size":1,"weight":60},"c800b6d9-163b-3db7-928f-86c1470a9542":{"size":1,"weight":40}} (weights are optional).'
 outputs:
-  result:
-    description: 'An output message'
+  run_id:
+    description: 'ID of the run started by this action.'
+  reports_url:
+    description: 'The URL of the reports page for this run (only when running on Gatling Enterprise Cloud).'
+  runs_url:
+    description: 'The URL of the runs page for this simulation (only when running on Gatling Enterprise Cloud).'
+  runs_status_code:
+    description: 'The code of the run''s final status.'
+  runs_status_name:
+    description: 'The name of the run''s final status.'
+  run_assertions:
+    description: 'The results of the run''s assertions, as a JSON array.'
 runs:
   using: 'node16'
   main: 'dist/index.js'
