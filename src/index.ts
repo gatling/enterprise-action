@@ -6,6 +6,9 @@ async function run(): Promise<void> {
   try {
     const config = readConfig();
     const client = apiClient(config.api);
+
+    await client.checkCloudCompatibility();
+
     const simulations = await client.getSimulations(); // TODO RND-6 Start simulation instead
     core.setOutput("result", `Found {} ${simulations.length} simulations.`);
   } catch (error) {
