@@ -19,7 +19,7 @@ export interface ApiClient {
   getRunInformation: (runId: string) => Promise<RunInformationResponse>;
   getSimulations: () => Promise<SimulationResponse[]>;
   abortRun: (runId: string) => Promise<void>;
-  getUserConcurrentMetric: (runId: string, scenario: string) => Promise<SeriesResponse[]>;
+  getConcurrentUserMetric: (runId: string, scenario: string) => Promise<SeriesResponse[]>;
   getRequestsSummary: (runId: string) => Promise<RequestsSummaryResponse>;
   checkCloudCompatibility: () => Promise<void>;
 }
@@ -32,7 +32,7 @@ export const apiClient = (conf: ApiClientConfig): ApiClient => {
     getRunInformation: (runId) => getJson(client, conf, "/run", { run: runId }),
     getSimulations: () => getJson(client, conf, "/simulations"),
     abortRun: (runId) => postJson(client, conf, "/simulations/abort", {}, { run: runId }),
-    getUserConcurrentMetric: (runId, scenario) => getJson(client, conf, "/series", seriesParams(runId, scenario)),
+    getConcurrentUserMetric: (runId, scenario) => getJson(client, conf, "/series", seriesParams(runId, scenario)),
     getRequestsSummary: (runId) => getJson(client, conf, "/summaries/requests", { run: runId }),
     checkCloudCompatibility: () => checkCloudCompatibility(client, conf)
   };

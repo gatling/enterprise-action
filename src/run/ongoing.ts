@@ -4,6 +4,7 @@ import { Assertion, RunInformationResponse } from "../client/responses/runInform
 import { setTimeout } from "timers/promises";
 import * as core from "@actions/core";
 import { isRunning, statusName } from "./status";
+import { getAndLogMetricsSummary } from "./metrics";
 
 export interface FinishedRun {
   runId: String;
@@ -21,6 +22,9 @@ export const waitForRunEnd = async (client: ApiClient, startedRun: StartedRun): 
     const statusMsg = `Run status is now ${statusName(runInfo.status)} [${runInfo.status}]`;
     runInfo.status !== oldStatus ? core.info(statusMsg) : core.debug(statusMsg);
     oldStatus = runInfo.status;
+    if (runInfo.injectStart > 0) {
+      await getAndLogMetricsSummary(client, runInfo);
+    }
   } while (isRunning(runInfo.status));
   return {
     runId: runInfo.runId,
