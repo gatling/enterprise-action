@@ -3,16 +3,16 @@ export interface RequestsSummaryResponse {
   responseTime: ResponseTimeRequestsSummary;
   in: InRequestsSummary;
   out: OutRequestsSummary;
-  children: RequestsSummaryChild[];
+  children?: RequestsSummaryChild[];
 }
 
 export interface RequestsSummaryChild {
   name: string;
-  index: number;
-  incrementalId: number;
   responseTime: ResponseTimeRequestsSummary;
   in: InRequestsSummary;
   out: OutRequestsSummary;
+  index?: number;
+  children?: RequestsSummaryChild[];
 }
 
 export interface ResponseTimeRequestsSummary {
