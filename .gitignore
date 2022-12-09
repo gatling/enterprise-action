@@ -28,3 +28,6 @@ node_modules/
 
 # Compiled project files
 dist/
+
+# Yarn error logs (and any others)
+*.log
