@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    ignore:
+      # the major version for Node should match the runtime configured in action.yml
+      - dependency-name: "@types/node"
+        update-types: [ "version-update:semver-major" ]
