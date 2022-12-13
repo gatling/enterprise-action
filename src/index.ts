@@ -4,6 +4,7 @@ import { apiClient } from "./client/apiClient";
 import { isSuccessful } from "./run/status";
 import { startRun } from "./run/start";
 import { FinishedRun, waitForRunEnd } from "./run/ongoing";
+import { formatErrorMessage } from "./utils/error";
 
 async function run(): Promise<void> {
   try {
@@ -26,8 +27,7 @@ async function run(): Promise<void> {
     core.setOutput("runs_status_name", finishedRun.statusName);
     core.setOutput("run_assertions", finishedRun.assertions);
   } catch (error) {
-    const msg = error instanceof Error ? error.message : `Unknown error: ${error}`;
-    core.setFailed(msg);
+    core.setFailed(formatErrorMessage(error));
   }
 }
 
