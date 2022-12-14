@@ -18,7 +18,7 @@ export interface ApiClient {
   startSimulation: (simulationId: string, options?: StartSimulationRequest) => Promise<StartSimulationResponse>;
   getRunInformation: (runId: string) => Promise<RunInformationResponse>;
   getSimulations: () => Promise<SimulationResponse[]>;
-  abortRun: (runId: string) => Promise<void>;
+  abortRun: (runId: string) => Promise<boolean>;
   getConcurrentUserMetric: (runId: string, scenario: string) => Promise<SeriesResponse[]>;
   getRequestsSummary: (runId: string) => Promise<RequestsSummaryResponse>;
   checkCloudCompatibility: () => Promise<void>;
@@ -31,7 +31,7 @@ export const apiClient = (conf: ApiClientConfig): ApiClient => {
       postJson(client, conf, "/simulations/start", options ?? {}, { simulation: simulationId }),
     getRunInformation: (runId) => getJson(client, conf, "/run", { run: runId }),
     getSimulations: () => getJson(client, conf, "/simulations"),
-    abortRun: (runId) => postJson(client, conf, "/simulations/abort", {}, { run: runId }),
+    abortRun: (runId) => abortRun(client, conf, runId),
     getConcurrentUserMetric: (runId, scenario) => getJson(client, conf, "/series", seriesParams(runId, scenario)),
     getRequestsSummary: (runId) => getJson(client, conf, "/summaries/requests", { run: runId }),
     checkCloudCompatibility: () => checkCloudCompatibility(client, conf)
@@ -47,6 +47,22 @@ const seriesParams = (runId: string, scenario: string) => ({
   remote: "",
   metric: "usrActive"
 });
+
+const abortRun = async (client: http.HttpClient, conf: ApiClientConfig, runId: string): Promise<boolean> => {
+  try {
+    await postJson(client, conf, "/simulations/abort", {}, { run: runId });
+    return true;
+  } catch (error) {
+    if (
+      error instanceof HttpClientError &&
+      (error.statusCode == HttpCodes.BadRequest || error.statusCode == HttpCodes.NotFound)
+    ) {
+      return false;
+    } else {
+      throw error;
+    }
+  }
+};
 
 const checkCloudCompatibility = async (client: http.HttpClient, conf: ApiClientConfig): Promise<void> => {
   const clientName = "gatling-enterprise-github-action";
