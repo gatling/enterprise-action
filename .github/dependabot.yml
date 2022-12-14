@@ -2,6 +2,9 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+    labels:
+      - "dependencies"
+      - "npm"
     schedule:
       interval: "weekly"
       day: "sunday"
@@ -9,3 +12,13 @@ updates:
       # the major version for Node should match the runtime configured in action.yml
       - dependency-name: "@types/node"
         update-types: [ "version-update:semver-major" ]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    commit-message:
+      prefix: "chore"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
