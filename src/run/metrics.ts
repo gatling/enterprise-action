@@ -2,8 +2,8 @@ import { ApiClient } from "../client/apiClient";
 import { format } from "date-fns";
 import { RunInformationResponse } from "../client/responses/runInformationResponse";
 import { RequestsSummaryChild } from "../client/responses/requestsSummaryResponse";
-import * as core from "@actions/core";
 import { formatDuration } from "../utils/duration";
+import { logInfoGroup } from "../utils/log";
 
 export const getAndLogMetricsSummary = async (client: ApiClient, runInfo: RunInformationResponse) => {
   const metricsSummary = await getMetricsSummary(client, runInfo);
@@ -53,16 +53,13 @@ const recursivelyGetChildren = (children: RequestsSummaryChild[]): ChildMetric[]
   );
 
 const logMetricsSummary = (summary: MetricsSummary) => {
-  const title = `Time: ${summary.date}, ${summary.duration} elapsed\n`;
-  const msg =
-    title +
+  logInfoGroup(
+    `Time: ${summary.date}, ${summary.duration} elapsed\n`,
     (summary.nbUsers > 0 ? `Number of concurrent users: ${summary.nbUsers}\n` : "") +
-    `Number of requests: ${summary.nbRequest}\n` +
-    `Number of requests per seconds: ${summary.requestsSeconds}\n` +
-    formatListMetrics(summary.listMetric);
-  core.startGroup(title);
-  core.info(msg);
-  core.endGroup();
+      `Number of requests: ${summary.nbRequest}\n` +
+      `Number of requests per seconds: ${summary.requestsSeconds}\n` +
+      formatListMetrics(summary.listMetric)
+  );
 };
 
 const formatListMetrics = (listMetric: ChildMetric[]): string => {

@@ -1,8 +1,8 @@
-import * as core from "@actions/core";
 import { readConfig } from "./config";
 import { apiClient } from "./client/apiClient";
 import { getRunIdState } from "./state";
 import { formatErrorMessage } from "./utils/error";
+import { logError, logInfo } from "./utils/log";
 
 const run = async (): Promise<void> => {
   try {
@@ -11,12 +11,12 @@ const run = async (): Promise<void> => {
     const runId = getRunIdState();
     const stopped = await client.abortRun(runId);
     if (stopped) {
-      core.info("Successfully stopped ongoing run");
+      logInfo("Successfully stopped ongoing run");
     } else {
-      core.info("There was no ongoing run to stop");
+      logInfo("There was no ongoing run to stop");
     }
   } catch (error) {
-    core.error("Failed attempt to clean up ongoing run, caused by: " + formatErrorMessage(error));
+    logError("Failed attempt to clean up ongoing run, caused by: " + formatErrorMessage(error));
   }
 };
 
