@@ -53,13 +53,16 @@ const recursivelyGetChildren = (children: RequestsSummaryChild[]): ChildMetric[]
   );
 
 const logMetricsSummary = (summary: MetricsSummary) => {
+  const title = `Time: ${summary.date}, ${summary.duration} elapsed\n`;
   const msg =
-    `Time: ${summary.date}, ${summary.duration} elapsed\n` +
+    title +
     (summary.nbUsers > 0 ? `Number of concurrent users: ${summary.nbUsers}\n` : "") +
     `Number of requests: ${summary.nbRequest}\n` +
     `Number of requests per seconds: ${summary.requestsSeconds}\n` +
     formatListMetrics(summary.listMetric);
+  core.startGroup(title);
   core.info(msg);
+  core.endGroup();
 };
 
 const formatListMetrics = (listMetric: ChildMetric[]): string => {
