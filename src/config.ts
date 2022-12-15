@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import { ApiClientConfig } from "./client/apiClient";
 import { string, dictionary, object, number, Validator, Ok, Err, Result } from "idonttrustlikethat";
+import { logDebug } from "./utils/log";
 
 export interface ActionConfig {
   gatlingEnterpriseUrl: string;
@@ -23,7 +24,7 @@ export interface LoadGeneratorConfiguration {
 export const readConfig = (): ActionConfig => {
   const gatlingEnterpriseUrl = getGatlingEnterpriseUrlConfig();
   const config = { gatlingEnterpriseUrl, api: getApiConfig(gatlingEnterpriseUrl), run: getRunConfig() };
-  core.debug("Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run }));
+  logDebug("Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run }));
   return config;
 };
 
