@@ -6,6 +6,7 @@ import { startRun } from "./run/start";
 import { FinishedRun, waitForRunEnd } from "./run/ongoing";
 import { formatErrorMessage } from "./utils/error";
 import { setPostStatusState, setRunIdState } from "./state";
+import { logError, logSuccess, setFailed } from "./utils/log";
 
 const run = async (): Promise<void> => {
   try {
@@ -29,22 +30,22 @@ const run = async (): Promise<void> => {
     core.setOutput("runs_status_name", finishedRun.statusName);
     core.setOutput("run_assertions", finishedRun.assertions);
   } catch (error) {
-    core.setFailed(formatErrorMessage(error));
+    setFailed(formatErrorMessage(error));
   }
 };
 
 const logResult = (finishedRun: FinishedRun) => {
   if (isSuccessful(finishedRun.statusCode)) {
-    core.info(`Run ${finishedRun.runId} finished with status ${finishedRun.statusName}`);
+    logSuccess(`Run ${finishedRun.runId} finished with status ${finishedRun.statusName}`);
   } else {
-    core.setFailed(`Run ${finishedRun.runId} failed with status ${finishedRun.statusName}`);
+    setFailed(`Run ${finishedRun.runId} failed with status ${finishedRun.statusName}`);
   }
 
   for (const assertion of finishedRun.assertions) {
     if (assertion.result) {
-      core.info(`${assertion.message} succeeded with value ${assertion.actualValue}`);
+      logSuccess(`${assertion.message} succeeded with value ${assertion.actualValue}`);
     } else {
-      core.error(`${assertion.message} failed with value ${assertion.actualValue}`);
+      logError(`${assertion.message} failed with value ${assertion.actualValue}`);
     }
   }
 };

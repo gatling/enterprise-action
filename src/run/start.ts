@@ -1,6 +1,6 @@
-import * as core from "@actions/core";
 import { ApiClient } from "../client/apiClient";
 import { ActionConfig } from "../config";
+import { logInfo } from "../utils/log";
 
 export interface StartedRun {
   runId: string;
@@ -14,14 +14,14 @@ export const startRun = async (client: ApiClient, config: ActionConfig): Promise
     extraEnvironmentVariables: config.run.extraEnvironmentVariables,
     overrideHostsByPool: config.run.overrideLoadGenerators
   });
-  core.info(`Started run ${response.runId} for simulation ${config.run.simulationId}`);
+  logInfo(`Started run ${response.runId} for simulation ${config.run.simulationId}`);
   const reportsUrl = webAppUrl(config, response.reportsPath);
   if (reportsUrl) {
-    core.info(`Reports will be available at ${reportsUrl}`);
+    logInfo(`Reports will be available at ${reportsUrl}`);
   }
   const runsUrl = webAppUrl(config, response.runsPath);
   if (runsUrl) {
-    core.info(`Runs history is available at ${runsUrl}`);
+    logInfo(`Runs history is available at ${runsUrl}`);
   }
   return { runId: response.runId, reportsUrl, runsUrl };
 };

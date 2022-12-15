@@ -2,10 +2,10 @@ import { ApiClient } from "../client/apiClient";
 import { StartedRun } from "./start";
 import { Assertion, RunInformationResponse } from "../client/responses/runInformationResponse";
 import { setTimeout } from "timers/promises";
-import * as core from "@actions/core";
 import { isRunning, statusName } from "./status";
 import { getAndLogMetricsSummary } from "./metrics";
 import { formatErrorMessage } from "../utils/error";
+import { logDebug, logInfo, logWarning } from "../utils/log";
 
 export interface FinishedRun {
   runId: String;
@@ -25,7 +25,7 @@ export const waitForRunEnd = async (client: ApiClient, startedRun: StartedRun): 
       await setTimeout(5000); // Initial delay even on first iteration because run duration might not be populated yet
       runInfo = await client.getRunInformation(startedRun.runId);
       const statusMsg = `Run status is now ${statusName(runInfo.status)} [${runInfo.status}]`;
-      runInfo.status !== oldStatus ? core.info(statusMsg) : core.debug(statusMsg);
+      runInfo.status !== oldStatus ? logInfo(statusMsg) : logDebug(statusMsg);
       oldStatus = runInfo.status;
       if (runInfo.injectStart > 0) {
         await getAndLogMetricsSummary(client, runInfo);
@@ -34,7 +34,7 @@ export const waitForRunEnd = async (client: ApiClient, startedRun: StartedRun): 
       errorCount++;
       if (errorCount < MAX_CONSECUTIVE_ERRORS) {
         const msg = formatErrorMessage(error);
-        core.warning(
+        logWarning(
           `Failed to retrieve current run information (attempt ${errorCount}/${MAX_CONSECUTIVE_ERRORS}): ${msg}`
         );
       } else {
