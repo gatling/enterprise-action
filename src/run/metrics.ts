@@ -1,8 +1,9 @@
 import { ApiClient } from "../client/apiClient";
-import { format, formatDistanceStrict } from "date-fns";
+import { format } from "date-fns";
 import { RunInformationResponse } from "../client/responses/runInformationResponse";
 import { RequestsSummaryChild } from "../client/responses/requestsSummaryResponse";
 import * as core from "@actions/core";
+import { formatDuration } from "../utils/duration";
 
 export const getAndLogMetricsSummary = async (client: ApiClient, runInfo: RunInformationResponse) => {
   const metricsSummary = await getMetricsSummary(client, runInfo);
@@ -17,7 +18,7 @@ const getMetricsSummary = async (client: ApiClient, runInfo: RunInformationRespo
 
   const currentTimestamp = Date.now();
   const date = format(currentTimestamp, "yyyy-MM-dd HH:mm:ss");
-  const duration = formatDistanceStrict(currentTimestamp, runInfo.injectStart);
+  const duration = formatDuration(runInfo.injectStart, currentTimestamp);
 
   const nbUsers = seriesResponse
     .map(({ values }) => (values.length === 0 ? 0.0 : values[values.length - 1]))
