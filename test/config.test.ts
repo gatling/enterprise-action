@@ -1,5 +1,28 @@
 import { expect, test } from "@jest/globals";
-import { configKeysInputValidation, overrideLoadGeneratorsInputValidation, uuidValidation } from "../src/config";
+import {
+  configKeysInputValidation,
+  overrideLoadGeneratorsInputValidation,
+  requiredBooleanValidation,
+  uuidValidation
+} from "../src/config";
+
+test("requiredBooleanValidation", () => {
+  expect(requiredBooleanValidation.validate("").ok).toBe(false);
+  expect(requiredBooleanValidation.validate("Yes").ok).toBe(false);
+  expect(requiredBooleanValidation.validate("TrueFalse").ok).toBe(false);
+
+  const res1 = requiredBooleanValidation.validate("true");
+  expect(res1.ok && res1.value).toBe(true);
+
+  const res2 = requiredBooleanValidation.validate("tRuE");
+  expect(res2.ok && res2.value).toBe(true);
+
+  const res3 = requiredBooleanValidation.validate("false");
+  expect(res3.ok && res3.value).toBe(false);
+
+  const res4 = requiredBooleanValidation.validate("FALSE");
+  expect(res4.ok && res4.value).toBe(false);
+});
 
 test("uuidValidation", () => {
   expect(uuidValidation.validate("").ok).toBe(false);

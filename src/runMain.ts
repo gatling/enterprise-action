@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import { readConfig } from "./config";
+import { ActionConfig, readConfig } from "./config";
 import { apiClient } from "./client/apiClient";
 import { isSuccessful } from "./run/status";
 import { startRun } from "./run/start";
@@ -24,7 +24,7 @@ const run = async (): Promise<void> => {
 
     const finishedRun = await waitForRunEnd(client, startedRun);
     setPostStatusState("post_noop"); // Run finished, no cleanup needed
-    logResult(finishedRun);
+    logResult(config, finishedRun);
 
     core.setOutput("runs_status_code", finishedRun.statusCode);
     core.setOutput("runs_status_name", finishedRun.statusName);
@@ -34,11 +34,16 @@ const run = async (): Promise<void> => {
   }
 };
 
-const logResult = (finishedRun: FinishedRun) => {
+const logResult = (config: ActionConfig, finishedRun: FinishedRun) => {
   if (isSuccessful(finishedRun.statusCode)) {
     logSuccess(`Run ${finishedRun.runId} finished with status ${finishedRun.statusName}`);
   } else {
-    setFailed(`Run ${finishedRun.runId} failed with status ${finishedRun.statusName}`);
+    const errorMessage = `Run ${finishedRun.runId} failed with status ${finishedRun.statusName}`;
+    if (config.failActionOnRunFailure) {
+      setFailed(errorMessage);
+    } else {
+      logError(errorMessage);
+    }
   }
 
   for (const assertion of finishedRun.assertions) {
