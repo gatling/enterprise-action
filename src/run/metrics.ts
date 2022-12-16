@@ -43,7 +43,7 @@ const getMetricsSummary = async (client: ApiClient, runInfo: RunInformationRespo
 const recursivelyGetChildren = (children: RequestsSummaryChild[]): ChildMetric[] =>
   children.map((child) =>
     child.children
-      ? { children: recursivelyGetChildren(child.children) }
+      ? { name: child.name, children: recursivelyGetChildren(child.children) }
       : {
           name: child.name,
           nbRequest: child.out.counts.total,
@@ -65,6 +65,7 @@ const logMetricsSummary = (summary: MetricsSummary) => {
 const formatListMetrics = (listMetric: ChildMetric[]): string => {
   const recurs = (listMetric: ChildMetric[], level: number): string[] => {
     const padding = " ".repeat(2 * level);
+    const formatNode = (node: ChildMetricNode): string => `${padding}> Group ${node.name}`;
     const formatLeaf = (leaf: ChildMetricLeaf): string[] => [
       `${padding}> Request ${leaf.name}`,
       `${padding}   Counts: ${leaf.nbRequest}`,
@@ -72,7 +73,7 @@ const formatListMetrics = (listMetric: ChildMetric[]): string => {
       `${padding}   Failure ratio: ${leaf.failureRatio}%`
     ];
     return listMetric.flatMap((child) =>
-      isChildMetricLeaf(child) ? formatLeaf(child) : recurs(child.children, level + 1)
+      isChildMetricLeaf(child) ? formatLeaf(child) : [formatNode(child), ...recurs(child.children, level + 1)]
     );
   };
   return recurs(listMetric, 0).join("\n");
@@ -100,5 +101,6 @@ interface ChildMetricLeaf {
 const isChildMetricLeaf = (o: ChildMetric): o is ChildMetricLeaf => !("children" in o);
 
 interface ChildMetricNode {
+  name: string;
   children: ChildMetric[];
 }
