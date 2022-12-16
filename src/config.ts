@@ -7,6 +7,7 @@ export interface ActionConfig {
   gatlingEnterpriseUrl: string;
   api: ApiClientConfig;
   run: RunConfig;
+  failActionOnRunFailure: boolean;
 }
 
 export interface RunConfig {
@@ -23,13 +24,22 @@ export interface LoadGeneratorConfiguration {
 
 export const readConfig = (): ActionConfig => {
   const gatlingEnterpriseUrl = getGatlingEnterpriseUrlConfig();
-  const config = { gatlingEnterpriseUrl, api: getApiConfig(gatlingEnterpriseUrl), run: getRunConfig() };
+  const failActionOnRunFailure = getFailActionOnRunFailureConfig();
+  const config = {
+    gatlingEnterpriseUrl,
+    api: getApiConfig(gatlingEnterpriseUrl),
+    run: getRunConfig(),
+    failActionOnRunFailure
+  };
   logDebug("Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run }));
   return config;
 };
 
 const getGatlingEnterpriseUrlConfig = (): string =>
   getValidatedInput("gatling_enterprise_url", requiredInputValidation, "gatling_enterprise_url is required");
+
+const getFailActionOnRunFailureConfig = (): boolean =>
+  getValidatedInput("fail_action_on_run_failure", requiredBooleanValidation, "fail_on_run_failure is required");
 
 const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
   const apiToken = getValidatedInput("api_token", requiredInputValidation, "api_token is required");
@@ -66,6 +76,14 @@ const getRunConfig = (): RunConfig => {
 
 const requiredInputValidation = string.filter((str) => str !== "");
 const optionalInputValidation = string.map((str) => (str === "" ? undefined : str));
+export const requiredBooleanValidation = requiredInputValidation.and((str) => {
+  const lowerCaseStr = str.toLowerCase();
+  return lowerCaseStr === "true"
+    ? Ok(true)
+    : lowerCaseStr === "false"
+    ? Ok(false)
+    : Err(`Invalid boolean value: ${str}`);
+});
 export const uuidValidation = string.filter((str) =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str)
 );
