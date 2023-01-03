@@ -6,8 +6,8 @@ inputs:
     required: false
     default: 'https://cloud.gatling.io'
   api_token:
-    description: 'A Gatling Enterprise API token with at least Start permission (we recommend storing it securely using GitHub''s encrypted secrets; see https://docs.github.com/en/actions/security-guides/encrypted-secrets#using-encrypted-secrets-in-a-workflow).'
-    required: true
+    description: 'A Gatling Enterprise API token with at least Start permission (we recommend storing it securely using GitHub''s encrypted secrets; see https://docs.github.com/en/actions/security-guides/encrypted-secrets#using-encrypted-secrets-in-a-workflow). Alternatively, you can define your token in an environment variable named GATLING_ENTERPRISE_API_TOKEN.'
+    required: false
   simulation_id:
     description: 'The ID of the simulation to run.'
     required: true
