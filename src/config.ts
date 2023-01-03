@@ -39,10 +39,15 @@ const getGatlingEnterpriseUrlConfig = (): string =>
   getValidatedInput("gatling_enterprise_url", requiredInputValidation, "gatling_enterprise_url is required");
 
 const getFailActionOnRunFailureConfig = (): boolean =>
-  getValidatedInput("fail_action_on_run_failure", requiredBooleanValidation, "fail_on_run_failure is required");
+  getValidatedInput("fail_action_on_run_failure", requiredBooleanValidation, "fail_action_on_run_failure is required");
 
 const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
-  const apiToken = getValidatedInput("api_token", requiredInputValidation, "api_token is required");
+  const apiToken = getValidatedInput(
+    "api_token",
+    requiredInputValidation,
+    "api_token is required",
+    "GATLING_ENTERPRISE_API_TOKEN"
+  );
   return {
     baseUrl: `${gatlingEnterpriseUrl}/api/public`,
     apiToken
@@ -106,12 +111,18 @@ export const overrideLoadGeneratorsInputValidation = optionalInputValidation.the
   overrideLoadGeneratorsValidation.optional()
 );
 
-const getValidatedInput = <T>(name: string, validator: Validator<T>, errorMessage: string) => {
+const getValidatedInput = <T>(name: string, validator: Validator<T>, errorMessage: string, envVarName?: string) => {
   const rawInput = core.getInput(name);
-  const result = validator.validate(rawInput);
+  const inputWithFallback = rawInput === "" && envVarName ? getEnvVar(envVarName) : rawInput;
+  const result = validator.validate(inputWithFallback);
   if (!result.ok) {
     // TODO RND-10 use validation error result to give better error messages
     throw new TypeError(errorMessage);
   }
   return result.value;
 };
+
+/**
+ * Returns an empty string if not found, to stay consistent with how GH Actions handles empty input values.
+ */
+const getEnvVar = (envVarName: string): string => process.env[envVarName] ?? "";
