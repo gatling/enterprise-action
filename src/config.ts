@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 import { ApiClientConfig } from "./client/apiClient";
-import { string, dictionary, object, number, Validator, Ok, Err, Result } from "idonttrustlikethat";
+import { boolean, string, dictionary, object, number, union, Validator, Ok, Err, Result } from "idonttrustlikethat";
 import { logDebug } from "./utils/log";
 
 export interface ActionConfig {
@@ -59,12 +59,12 @@ const getRunConfig = (): RunConfig => {
   const extraSystemProperties = getValidatedInput(
     "extra_system_properties",
     configKeysInputValidation,
-    "extra_system_properties must be a JSON object and only contain string values (or omitted entirely)"
+    "extra_system_properties must be a JSON object and only contain string, number, and boolean values (or omitted entirely)"
   );
   const extraEnvironmentVariables = getValidatedInput(
     "extra_environment_variables",
     configKeysInputValidation,
-    "extra_environment_variables must be a JSON object and only contain string values (or omitted entirely)"
+    "extra_environment_variables must be a JSON object and only contain string, number, and boolean values (or omitted entirely)"
   );
   const overrideLoadGenerators = getValidatedInput(
     "override_load_generators",
@@ -102,7 +102,11 @@ export const jsonValidation = string.and((str): Result<string, any> => {
     throw e;
   }
 });
-const configKeysValidation = jsonValidation.then(dictionary(string, string));
+
+const configKeyValueValidation = union(string, number, boolean).map((value) =>
+  typeof value === "string" ? value : `${value}`
+);
+const configKeysValidation = jsonValidation.then(dictionary(string, configKeyValueValidation));
 export const configKeysInputValidation = optionalInputValidation.then(configKeysValidation.optional());
 const overrideLoadGeneratorsValidation = jsonValidation.then(
   dictionary(uuidValidation, object({ size: number, weight: number.optional() }))
