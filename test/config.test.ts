@@ -46,9 +46,18 @@ test("configKeysInputValidation", () => {
   const validObjectRes = configKeysInputValidation.validate('{"key_1": "First value", "key_2": "Second value"}');
   expect(validObjectRes.ok && validObjectRes.value).toStrictEqual({ key_1: "First value", key_2: "Second value" });
 
+  const validConversionsRes = configKeysInputValidation.validate(
+    '{"key_1": "First value", "key_2": 42, "key_3": false}'
+  );
+  expect(validConversionsRes.ok && validConversionsRes.value).toStrictEqual({
+    key_1: "First value",
+    key_2: "42",
+    key_3: "false"
+  });
+
   expect(configKeysInputValidation.validate('"key_1": "First value"').ok).toBe(false);
   expect(configKeysInputValidation.validate('"First value"').ok).toBe(false);
-  expect(configKeysInputValidation.validate('{"key_1": "First value", "key_2": 123}').ok).toBe(false);
+  expect(configKeysInputValidation.validate('{"key_1": "First value", "key_2": ["a", "b"]}').ok).toBe(false);
 });
 
 test("hostsByPoolInputValidation", () => {
