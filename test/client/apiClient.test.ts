@@ -1,7 +1,7 @@
-import { apiClient, ApiClientConfig } from "../../src/client/apiClient";
+import { apiClient, ApiClientConfig } from "@src/client/apiClient";
 import nock from "nock";
 import { expect, test } from "@jest/globals";
-import { StartSimulationResponse } from "../../src/client/responses/startSimulationResponse";
+import { StartSimulationResponse } from "@src/client/responses/startSimulationResponse";
 import { HttpClientError } from "@actions/http-client";
 
 const config: ApiClientConfig = {
