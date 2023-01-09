@@ -1,13 +1,18 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "./lib",
     "rootDir": "./src",
+    "paths": {
+      "@src/*": ["src/*"]
+    },
     "lib": ["ES2021"],
     "module": "CommonJS",
     "target": "ES2021",
     "esModuleInterop": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
   },
-  "exclude": ["node_modules", "**/*.test.ts"]
+  "exclude": ["node_modules", "**/*.test.ts", "jest.config.ts"]
 }

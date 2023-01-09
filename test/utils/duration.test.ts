@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import { formatDuration } from "../../src/utils/duration";
+import { formatDuration } from "@src/utils/duration";
 
 test("formatDuration d/h/m/s", () => {
   const start = new Date(2022, 12, 14, 7, 52, 15, 0).getTime();
