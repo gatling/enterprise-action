@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { RunInformationResponse } from "../client/responses/runInformationResponse";
 import { RequestsSummaryChild } from "../client/responses/requestsSummaryResponse";
 import { formatDuration } from "../utils/duration";
-import { logInfoGroup } from "../utils/log";
+import { logGroup } from "../utils/log";
 
 export const getAndLogMetricsSummary = async (client: ApiClient, runInfo: RunInformationResponse) => {
   const metricsSummary = await getMetricsSummary(client, runInfo);
@@ -53,7 +53,7 @@ const recursivelyGetChildren = (children: RequestsSummaryChild[]): ChildMetric[]
   );
 
 const logMetricsSummary = (summary: MetricsSummary) => {
-  logInfoGroup(
+  logGroup(
     `Time: ${summary.date}, ${summary.duration} elapsed\n`,
     (summary.nbUsers > 0 ? `Number of concurrent users: ${summary.nbUsers}\n` : "") +
       `Number of requests: ${summary.nbRequest}\n` +
