@@ -2,32 +2,34 @@ import * as core from "@actions/core";
 
 export const logDebug: (message: string) => void = core.debug;
 
-export const logInfo: (message: string) => void = core.info;
+export const log: (message: string) => void = core.info;
 
-export const logInfoGroup = (title: string, message: string): void => {
+export const logGroup = (title: string, message: string): void => {
   core.startGroup(title);
-  logInfo(message);
+  log(message);
   core.endGroup();
 };
 
-export const logSuccess = (message: string): void => {
-  core.info(green(message));
+export const annotateNotice = (message: string, title?: string): void => {
+  core.notice(message, { title });
 };
 
-export const logWarning = (message: string): void => {
-  core.warning(yellow(message));
+export const annotateWarning = (message: string, title?: string): void => {
+  core.warning(message, { title });
 };
 
-export const logError = (message: string): void => {
-  core.error(red(message));
+export const annotateError = (message: string, title?: string): void => {
+  core.error(message, { title });
 };
 
 export const setFailed = (message: string): void => {
-  core.setFailed(red(message));
+  core.setFailed(message);
 };
 
-const red = (text: string): string => "\u001b[31m" + text + "\u001b[0m";
+export const bright = (text: string): string => "\u001b[37;1m" + text + "\u001b[0m";
 
-const green = (text: string): string => "\u001b[32m" + text + "\u001b[0m";
+export const green = (text: string): string => "\u001b[32m" + text + "\u001b[0m";
 
-const yellow = (text: string): string => "\u001b[33m" + text + "\u001b[0m";
+export const yellow = (text: string): string => "\u001b[33m" + text + "\u001b[0m";
+
+export const red = (text: string): string => "\u001b[31m" + text + "\u001b[0m";

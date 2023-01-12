@@ -15,9 +15,12 @@ on:
       override_load_generators:
         type: string
         required: false
+      fail_action_on_run_failure:
+        type: boolean
+        default: 'true'
 
 jobs:
-  run:
+  run-gatling-simulation:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,6 +40,7 @@ jobs:
           extra_system_properties: ${{ inputs.extra_system_properties }}
           extra_environment_variables: ${{ inputs.extra_environment_variables }}
           override_load_generators: ${{ inputs.override_load_generators }}
+          fail_action_on_run_failure: ${{ inputs.fail_action_on_run_failure }}
 
       - name: Print output
         run: |
