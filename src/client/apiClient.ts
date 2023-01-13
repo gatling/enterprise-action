@@ -67,7 +67,7 @@ const abortRun = async (client: http.HttpClient, conf: ApiClientConfig, runId: s
 const checkCloudCompatibility = async (client: http.HttpClient, conf: ApiClientConfig): Promise<void> => {
   const clientName = "gatling-enterprise-github-action";
   const version = "0.0.1";
-  const response = await client.get(buildUrl(conf, "/compatibility", { clientName, version }));
+  const response = await client.get(buildUrl(conf, "/compatibility", { clientName, version }), baseHeaders);
   if (response.message.statusCode === HttpCodes.BadRequest) {
     throw new Error(
       `Plugin ${clientName} version ${version} is no longer supported; please upgrade to the latest version`
@@ -90,7 +90,12 @@ const postJson = <T>(
   params?: Record<string, string>
 ): Promise<T> => client.postJson<T>(buildUrl(conf, path, params), payload, headers(conf)).then(handleJsonResponse);
 
-const headers = (conf: ApiClientConfig): OutgoingHttpHeaders => ({ Authorization: conf.apiToken });
+const headers = (conf: ApiClientConfig): OutgoingHttpHeaders => ({
+  ...baseHeaders,
+  Authorization: conf.apiToken
+});
+
+const baseHeaders: OutgoingHttpHeaders = { "User-Agent": "GatlingEnterpriseGitHubAction/v1" };
 
 const buildUrl = (conf: ApiClientConfig, path: string, queryParams?: Record<string, string>): string => {
   const resourceUrl = conf.baseUrl + path;
