@@ -24,6 +24,10 @@ inputs:
     description: 'Whether the action should fail if the run ends with a failed status. True by default. If set to false, some of this action''s outputs may be missing.'
     required: false
     default: 'true'
+  wait_for_run_end:
+    description: 'Whether the action should wait for the end of the Gatling Enterprise simulation run before terminating. True by default. If set to false, some of this action''s outputs may be missing.'
+    required: false
+    default: 'true'
 outputs:
   run_id:
     description: 'ID of the run started by this action.'

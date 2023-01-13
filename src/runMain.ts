@@ -21,18 +21,22 @@ const run = async (): Promise<void> => {
     setPostStatusState("post_cleanup"); // Run started, cleanup will be needed if interrupted now
     logStart(config, startedRun);
 
-    core.setOutput("run_id", startedRun.runId);
-    core.setOutput("reports_url", startedRun.reportsUrl);
-    core.setOutput("runs_url", startedRun.runsUrl);
+    if (config.waitForRunEnd) {
+      core.setOutput("run_id", startedRun.runId);
+      core.setOutput("reports_url", startedRun.reportsUrl);
+      core.setOutput("runs_url", startedRun.runsUrl);
 
-    const finishedRun = await waitForRunEnd(client, startedRun);
-    setPostStatusState("post_noop"); // Run finished, no cleanup needed
-    logAssertionResults(finishedRun.assertions);
-    logResult(config, startedRun, finishedRun);
+      const finishedRun = await waitForRunEnd(client, startedRun);
+      setPostStatusState("post_noop"); // Run finished, no cleanup needed
+      logAssertionResults(finishedRun.assertions);
+      logResult(config, startedRun, finishedRun);
 
-    core.setOutput("runs_status_code", finishedRun.statusCode);
-    core.setOutput("runs_status_name", finishedRun.statusName);
-    core.setOutput("run_assertions", finishedRun.assertions);
+      core.setOutput("runs_status_code", finishedRun.statusCode);
+      core.setOutput("runs_status_name", finishedRun.statusName);
+      core.setOutput("run_assertions", finishedRun.assertions);
+    } else {
+      setPostStatusState("post_noop"); // Not waiting for run end, no cleanup needed
+    }
   } catch (error) {
     setFailed(formatErrorMessage(error));
   }

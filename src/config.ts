@@ -8,6 +8,7 @@ export interface ActionConfig {
   api: ApiClientConfig;
   run: RunConfig;
   failActionOnRunFailure: boolean;
+  waitForRunEnd: boolean;
 }
 
 export interface RunConfig {
@@ -25,11 +26,13 @@ export interface LoadGeneratorConfiguration {
 export const readConfig = (): ActionConfig => {
   const gatlingEnterpriseUrl = getGatlingEnterpriseUrlConfig();
   const failActionOnRunFailure = getFailActionOnRunFailureConfig();
+  const waitForRunEnd = getWaitForRunEnd();
   const config = {
     gatlingEnterpriseUrl,
     api: getApiConfig(gatlingEnterpriseUrl),
     run: getRunConfig(),
-    failActionOnRunFailure
+    failActionOnRunFailure,
+    waitForRunEnd
   };
   logDebug("Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run }));
   return config;
@@ -40,6 +43,9 @@ const getGatlingEnterpriseUrlConfig = (): string =>
 
 const getFailActionOnRunFailureConfig = (): boolean =>
   getValidatedInput("fail_action_on_run_failure", requiredBooleanValidation, "fail_action_on_run_failure is required");
+
+const getWaitForRunEnd = (): boolean =>
+  getValidatedInput("wait_for_run_end", requiredBooleanValidation, "wait_for_run_end is required");
 
 const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
   const apiToken = getValidatedInput(

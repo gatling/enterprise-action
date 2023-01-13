@@ -18,6 +18,9 @@ on:
       fail_action_on_run_failure:
         type: boolean
         default: 'true'
+      wait_for_run_end:
+        type: boolean
+        default: 'true'
 
 jobs:
   run-gatling-simulation:
@@ -41,6 +44,7 @@ jobs:
           extra_environment_variables: ${{ inputs.extra_environment_variables }}
           override_load_generators: ${{ inputs.override_load_generators }}
           fail_action_on_run_failure: ${{ inputs.fail_action_on_run_failure }}
+          wait_for_run_end: ${{ inputs.wait_for_run_end }}
 
       - name: Print output
         run: |
