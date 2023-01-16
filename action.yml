@@ -1,5 +1,8 @@
-name: 'GitHub Enterprise Action'
-description: '[WORK IN PROGRESS] Run your load tests on Gatling Enterprise straight from your GitHub Action CI/CD workflows.'
+name: 'Gatling Enterprise Action'
+description: 'Run your load tests on Gatling Enterprise straight from your GitHub Actions CI/CD workflows.'
+branding:
+  icon: 'bar-chart-2'
+  color: 'purple'
 inputs:
   gatling_enterprise_url:
     description: 'URL of your Gatling Enterprise server (needed only for self-hosted instances).'
