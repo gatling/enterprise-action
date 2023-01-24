@@ -19,7 +19,7 @@ const MAX_CONSECUTIVE_ERRORS = 5;
 export const waitForRunEnd = async (client: ApiClient, startedRun: StartedRun): Promise<FinishedRun> => {
   let runInfo: RunInformationResponse | undefined;
   let oldStatus: number = -1;
-  let errorCount = 0;
+  let consecutiveErrorsCount = 0;
   do {
     try {
       await setTimeout(5000); // Initial delay even on first iteration because run duration might not be populated yet
@@ -30,12 +30,15 @@ export const waitForRunEnd = async (client: ApiClient, startedRun: StartedRun): 
       if (runInfo.injectStart > 0) {
         await getAndLogMetricsSummary(client, runInfo);
       }
+      consecutiveErrorsCount = 0;
     } catch (error) {
-      errorCount++;
-      if (errorCount < MAX_CONSECUTIVE_ERRORS) {
+      consecutiveErrorsCount++;
+      if (consecutiveErrorsCount < MAX_CONSECUTIVE_ERRORS) {
         const msg = formatErrorMessage(error);
         log(
-          yellow(`Failed to retrieve current run information (attempt ${errorCount}/${MAX_CONSECUTIVE_ERRORS}): ${msg}`)
+          yellow(
+            `Failed to retrieve current run information (attempt ${consecutiveErrorsCount}/${MAX_CONSECUTIVE_ERRORS}): ${msg}`
+          )
         );
       } else {
         throw error;
