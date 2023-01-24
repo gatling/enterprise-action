@@ -21,11 +21,11 @@ const run = async (): Promise<void> => {
     setPostStatusState("post_cleanup"); // Run started, cleanup will be needed if interrupted now
     logStart(config, startedRun);
 
-    if (config.waitForRunEnd) {
-      core.setOutput("run_id", startedRun.runId);
-      core.setOutput("reports_url", startedRun.reportsUrl);
-      core.setOutput("runs_url", startedRun.runsUrl);
+    core.setOutput("run_id", startedRun.runId);
+    core.setOutput("reports_url", startedRun.reportsUrl);
+    core.setOutput("runs_url", startedRun.runsUrl);
 
+    if (config.waitForRunEnd) {
       const finishedRun = await waitForRunEnd(client, startedRun);
       setPostStatusState("post_noop"); // Run finished, no cleanup needed
       logAssertionResults(finishedRun.assertions);
