@@ -44,3 +44,11 @@ For instance, we can use `act` to test the [run-enterprise-action.yml](.github/w
 - Run the workflow with `act workflow_dispatch --eventpath payload.json --secret-file secrets`.
 
 See the `act` README for other ideas on how to test workflows locally.
+
+## Run docker locally
+
+Run locally (input must be passed with environment variables, e.g. `GATLING_ENTERPRISE_API_TOKEN`):
+
+```shell
+yarn docker-runner-start
+```

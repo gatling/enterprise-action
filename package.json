@@ -13,7 +13,7 @@
     "ci": "yarn run setup-yarn && yarn install --immutable",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
-    "test": "yarn workspaces foreach run test",
+    "test": "yarn workspaces foreach run test --passWithNoTests",
     "package": "yarn workspaces foreach run package",
     "gh-action-start": "yarn workspace '@gatling-enterprise-runner/gh-action' run start",
     "docker-runner-start": "yarn workspace '@gatling-enterprise-runner/docker' run start"
