@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 
-import { StateStore } from "@gatling-enterprise-runner/common/src/state";
+import { StateStore } from "@gatling-enterprise-runner/common";
 
 const RUN_ID_KEY = "run_id";
 const POST_STATUS_KEY = "post_status";

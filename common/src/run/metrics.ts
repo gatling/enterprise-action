@@ -4,7 +4,7 @@ import { ApiClient } from "../client/apiClient";
 import { RequestsSummaryChild } from "../client/responses/requestsSummaryResponse";
 import { RunInformationResponse } from "../client/responses/runInformationResponse";
 import { Logger } from "../log";
-import { formatDuration } from "../utils/duration";
+import { formatDuration } from "../utils";
 
 export const getAndLogMetricsSummary = async (client: ApiClient, logger: Logger, runInfo: RunInformationResponse) => {
   const metricsSummary = await getMetricsSummary(client, runInfo);

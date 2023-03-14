@@ -3,7 +3,7 @@ import { Config } from "./config";
 import { Logger } from "./log";
 import { formatErrorMessage } from "./utils/error";
 
-const run = async (logger: Logger, config: Config, runId: string): Promise<void> => {
+export const runCleanup = async (logger: Logger, config: Config, runId: string): Promise<void> => {
   try {
     const client = apiClient(config.api);
     const stopped = await client.abortRun(runId);
@@ -16,5 +16,3 @@ const run = async (logger: Logger, config: Config, runId: string): Promise<void>
     logger.annotateError("Failed attempt to clean up ongoing run, caused by: " + formatErrorMessage(error));
   }
 };
-
-export default run;

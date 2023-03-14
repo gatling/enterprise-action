@@ -4,6 +4,7 @@
     "paths": {
       "@src/*": ["src/*"]
     },
+    "rootDir": "src",
     "lib": ["ES2021"],
     "module": "CommonJS",
     "target": "ES2021",
@@ -12,5 +13,10 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
-  "exclude": ["node_modules", "**/*.test.ts", "jest.config.ts"]
+  "references": [
+    {
+      "path": "../common"
+    }
+  ],
+  "exclude": ["dist", "**/*.test.ts", "jest.config.ts"]
 }
