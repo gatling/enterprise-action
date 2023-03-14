@@ -26,7 +26,7 @@ Format code:
 yarn format
 ```
 
-## Run gh-action locally
+## gh-action
 
 Run locally (input can be passed with environment variables, e.g. use `INPUT_FOO` for the input named `foo`):
 
@@ -45,10 +45,20 @@ For instance, we can use `act` to test the [run-enterprise-action.yml](.github/w
 
 See the `act` README for other ideas on how to test workflows locally.
 
-## Run docker locally
+## docker
+
+Enable debug logs with the environment variable `DEBUG=true`.
 
 Run locally (input must be passed with environment variables, e.g. `GATLING_ENTERPRISE_API_TOKEN`):
 
 ```shell
 yarn docker-runner-start
+```
+
+### Run locally as a docker container
+
+```shell
+yarn package
+docker build --tag <repository name>/enterprise-runner:latest ./docker
+docker run --env GATLING_ENTERPRISE_API_TOKEN=<env> --env SIMULATION_ID=<simulation id> [other env vars...] <repository name>/enterprise-runner:latest 
 ```

@@ -1,10 +1,17 @@
 import { StateStore } from "@gatling-enterprise-runner/common/src/state";
 
-export const dockerState: StateStore = {
+export interface DockerStateStore extends StateStore {
+  getRunning: () => string | undefined;
+}
+
+let running: string | undefined;
+
+export const dockerState: DockerStateStore = {
   setRunning: (runId) => {
-    // NOOP
+    running = runId;
   },
   setFinished: () => {
-    // NOOP
-  }
+    running = undefined;
+  },
+  getRunning: () => running
 };

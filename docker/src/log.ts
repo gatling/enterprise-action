@@ -1,12 +1,14 @@
 import { Logger } from "@gatling-enterprise-runner/common/src/log";
 
-const debug: (message: string) => void = console.debug;
-
 const log: (message: string) => void = console.info;
+
+const debug: (message: string) => void =
+  // On Node.js, console.debug is just an alias to console.log, so we handle debug level ourselves
+  process.env["DEBUG"] === "true" ? log : () => {};
 
 const group = (title: string, message: string): void => {
   const firstLine = title ? title + "\n" : "";
-  log("\n" + firstLine + message);
+  log(firstLine + message + "\n");
 };
 
 const annotateNotice = (message: string, title?: string): void => {

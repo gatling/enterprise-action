@@ -9,6 +9,7 @@
     "start": "ncc run ./src/index.ts"
   },
   "dependencies": {
-    "@gatling-enterprise-runner/common": "0.0.0"
+    "@gatling-enterprise-runner/common": "0.0.0",
+    "async-cleanup": "1.0.0"
   }
 }
