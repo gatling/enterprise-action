@@ -1,15 +1,17 @@
 import { apiClient } from "./client/apiClient";
 import { Assertion } from "./client/responses/runInformationResponse";
 import { Config } from "./config";
-import { Logger, bright, green, red } from "./log";
+import { Logger } from "./log";
 import { Output } from "./output";
 import { FinishedRun, waitForRunEnd } from "./run/ongoing";
 import { StartedRun, startRun } from "./run/start";
 import { isSuccessful } from "./run/status";
 import { StateStore } from "./state";
-import { formatErrorMessage } from "./utils/error";
+import { formatErrorMessage, console } from "./utils";
 
-const run = async (output: Output, logger: Logger, config: Config, state: StateStore): Promise<void> => {
+const { red, green, bright } = console;
+
+export const runMain = async (output: Output, logger: Logger, config: Config, state: StateStore): Promise<void> => {
   try {
     // Do not re-run the main action when launched again later
     state.setFinished();
@@ -99,5 +101,3 @@ const logResult = (logger: Logger, config: Config, startedRun: StartedRun, finis
   logger.log(bright(`See the run reports at ${startedRun.reportsUrl}`));
   logger.log(bright(`See the runs history at ${startedRun.runsUrl}`));
 };
-
-export default run;

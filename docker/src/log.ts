@@ -1,4 +1,6 @@
-import { Logger, bright } from "@gatling-enterprise-runner/common/src/log";
+import { Logger, utils } from "@gatling-enterprise-runner/common";
+
+const { bright } = utils.console;
 
 const log: (message: string) => void = console.info;
 

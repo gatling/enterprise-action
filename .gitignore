@@ -31,6 +31,7 @@ node_modules/
 
 # Compiled project files
 dist/
+*.tsbuildinfo
 
 # Local test files
 /dev-env/

@@ -1,5 +1,4 @@
-import runCleanup from "@gatling-enterprise-runner/common/src/runCleanup";
-import runMain from "@gatling-enterprise-runner/common/src/runMain";
+import { runCleanup, runMain } from "@gatling-enterprise-runner/common";
 
 import { readConfig } from "./config";
 import { gitHubLogger } from "./log";

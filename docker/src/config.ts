@@ -1,19 +1,8 @@
 import { Validator } from "idonttrustlikethat";
 
-import { ApiClientConfig } from "@gatling-enterprise-runner/common/src/client/apiClient";
-import {
-  Config,
-  RunConfig,
-  requiredInputValidation,
-  requiredBooleanValidation,
-  uuidValidation,
-  configKeysInputValidation,
-  overrideLoadGeneratorsInputValidation,
-  optionalInputValidation
-} from "@gatling-enterprise-runner/common/src/config";
-import { Logger } from "@gatling-enterprise-runner/common/src/log";
+import { config, Logger, ApiClientConfig } from "@gatling-enterprise-runner/common";
 
-export interface DockerConfig extends Config {
+export interface DockerConfig extends config.Config {
   outputDotEnvPath: string | undefined;
 }
 
@@ -36,29 +25,29 @@ export const readConfig = (logger: Logger): DockerConfig => {
 const getGatlingEnterpriseUrlConfig = (): string =>
   getValidatedInput(
     "GATLING_ENTERPRISE_URL",
-    requiredInputValidation,
+    config.requiredInputValidation,
     "GATLING_ENTERPRISE_URL is required",
     "https://cloud.gatling.io"
   );
 
 const getOutputDotEnvPath = (): string | undefined =>
-  getValidatedInput("OUTPUT_DOT_ENV_FILE_PATH", optionalInputValidation, "");
+  getValidatedInput("OUTPUT_DOT_ENV_FILE_PATH", config.optionalInputValidation, "");
 
 const getFailActionOnRunFailureConfig = (): boolean =>
   getValidatedInput(
     "FAIL_ACTION_ON_RUN_FAILURE",
-    requiredBooleanValidation,
+    config.requiredBooleanValidation,
     "FAIL_ACTION_ON_RUN_FAILURE is required",
     "true"
   );
 
 const getWaitForRunEnd = (): boolean =>
-  getValidatedInput("WAIT_FOR_RUN_END", requiredBooleanValidation, "WAIT_FOR_RUN_END is required", "true");
+  getValidatedInput("WAIT_FOR_RUN_END", config.requiredBooleanValidation, "WAIT_FOR_RUN_END is required", "true");
 
 const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
   const apiToken = getValidatedInput(
     "GATLING_ENTERPRISE_API_TOKEN",
-    requiredInputValidation,
+    config.requiredInputValidation,
     "GATLING_ENTERPRISE_API_TOKEN is required"
   );
   return {
@@ -67,21 +56,21 @@ const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
   };
 };
 
-const getRunConfig = (): RunConfig => {
-  const simulationId = getValidatedInput("SIMULATION_ID", uuidValidation, "SIMULATION_ID must be a valid UUID");
+const getRunConfig = (): config.RunConfig => {
+  const simulationId = getValidatedInput("SIMULATION_ID", config.uuidValidation, "SIMULATION_ID must be a valid UUID");
   const extraSystemProperties = getValidatedInput(
     "EXTRA_SYSTEM_PROPERTIES",
-    configKeysInputValidation,
+    config.configKeysInputValidation,
     "EXTRA_SYSTEM_PROPERTIES must be a JSON object and only contain string, number, and boolean values (or omitted entirely)"
   );
   const extraEnvironmentVariables = getValidatedInput(
     "EXTRA_ENVIRONMENT_VARIABLES",
-    configKeysInputValidation,
+    config.configKeysInputValidation,
     "EXTRA_ENVIRONMENT_VARIABLES must be a JSON object and only contain string, number, and boolean values (or omitted entirely)"
   );
   const overrideLoadGenerators = getValidatedInput(
     "OVERRIDE_LOAD_GENERATORS",
-    overrideLoadGeneratorsInputValidation,
+    config.overrideLoadGeneratorsInputValidation,
     "OVERRIDE_LOAD_GENERATORS must be a valid configuration for overriding load generators"
   );
   return {

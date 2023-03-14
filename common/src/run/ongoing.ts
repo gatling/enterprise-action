@@ -2,11 +2,11 @@ import { setTimeout } from "timers/promises";
 
 import { ApiClient } from "../client/apiClient";
 import { Assertion, RunInformationResponse } from "../client/responses/runInformationResponse";
-import { Logger, yellow } from "../log";
+import { Logger } from "../log";
 import { getAndLogMetricsSummary } from "../run/metrics";
 import { StartedRun } from "../run/start";
 import { isRunning, statusName } from "../run/status";
-import { formatErrorMessage } from "../utils/error";
+import { formatErrorMessage, console } from "../utils";
 
 export interface FinishedRun {
   runId: String;
@@ -41,7 +41,7 @@ export const waitForRunEnd = async (
       if (consecutiveErrorsCount < MAX_CONSECUTIVE_ERRORS) {
         const msg = formatErrorMessage(error);
         logger.log(
-          yellow(
+          console.yellow(
             `Failed to retrieve current run information (attempt ${consecutiveErrorsCount}/${MAX_CONSECUTIVE_ERRORS}): ${msg}`
           )
         );

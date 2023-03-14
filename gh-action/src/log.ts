@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 
-import { Logger } from "@gatling-enterprise-runner/common/src/log";
+import { Logger } from "@gatling-enterprise-runner/common";
 
 const debug: (message: string) => void = core.debug;
 

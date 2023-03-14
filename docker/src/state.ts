@@ -1,4 +1,4 @@
-import { StateStore } from "@gatling-enterprise-runner/common/src/state";
+import { StateStore } from "@gatling-enterprise-runner/common";
 
 export interface DockerStateStore extends StateStore {
   getRunning: () => string | undefined;
