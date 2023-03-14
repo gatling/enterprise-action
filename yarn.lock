@@ -460,6 +460,7 @@ __metadata:
   resolution: "@gatling-enterprise-runner/docker@workspace:docker"
   dependencies:
     "@gatling-enterprise-runner/common": 0.0.0
+    async-cleanup: 1.0.0
   languageName: unknown
   linkType: soft
 
@@ -1135,6 +1136,13 @@ __metadata:
   version: 2.0.1
   resolution: "argparse@npm:2.0.1"
   checksum: 83644b56493e89a254bae05702abf3a1101b4fa4d0ca31df1c9985275a5a5bd47b3c27b7fa0b71098d41114d8ca000e6ed90cad764b306f8a503665e4d517ced
+  languageName: node
+  linkType: hard
+
+"async-cleanup@npm:1.0.0":
+  version: 1.0.0
+  resolution: "async-cleanup@npm:1.0.0"
+  checksum: d2dea124db5f546716f9c5237714d78978de39e78f0bf9d9e884497249543e073203b1949c78262b2485e9ed827dc9a26d2392954be6e4025e9f06552c5164dc
   languageName: node
   linkType: hard
 
