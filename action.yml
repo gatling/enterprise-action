@@ -31,6 +31,22 @@ inputs:
     description: 'Whether the action should wait for the end of the Gatling Enterprise simulation run before terminating. True by default. If set to false, some of this action''s outputs may be missing.'
     required: false
     default: 'true'
+  run_summary_enable:
+    description: 'When wait_for_run_end is true, will regularly display a summary of the ongoing run in the console. True by default.'
+    required: false
+    default: 'true'
+  run_summary_refresh_delay_constant:
+    description: 'Constant part of the delay before displaying a new summary of the ongoing run in the console, in seconds. 5.0 seconds by default (which is the minimum). This initial delay grows exponentially by the factor set in run_summary_refresh_delay_multiplier to make the output less verbose. Note that the underlying data is only refreshed every 5 seconds, so the actual delay is approximate.'
+    required: false
+    default: '5.0'
+  run_summary_refresh_delay_multiplier:
+    description: 'A multiplier for the delay before displaying a new summary of the ongoing run in the console. 2.0 by default (minimum 1.0, which sets a constant delay). Every time a summary is displayed, the delay before the next one is multiplied by this value.'
+    required: false
+    default: '2.0'
+  run_summary_refresh_delay_max:
+    description: 'A maximum delay before displaying a new summary of the ongoing run in the console, in seconds. 300 seconds by default (minimum 5). The exponential increase of the delay will be capped to this value.'
+    required: false
+    default: '300'
 outputs:
   run_id:
     description: 'ID of the run started by this action.'

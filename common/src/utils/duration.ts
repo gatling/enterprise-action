@@ -5,9 +5,15 @@ import assert from "assert";
  * @param start timestamp in milliseconds
  * @param end timestamp in milliseconds
  */
-export const formatDuration = (start: number, end: number): string => {
-  const totalSeconds = Math.floor((end - start) / 1000);
-  assert(totalSeconds >= 0, "Cannot format negative duration");
+export const formatDurationDiff = (start: number, end: number): string => formatDuration(end - start);
+
+/**
+ * Formats duration with a format like "2h 25m 12s".
+ * @param duration duration in milliseconds
+ */
+export const formatDuration = (duration: number): string => {
+  assert(duration >= 0, "Cannot format negative duration");
+  const totalSeconds = Math.floor(duration / 1000);
 
   let formattedStr = "";
   let remainder = totalSeconds;

@@ -7,6 +7,7 @@ import { getAndLogMetricsSummary } from "../run/metrics";
 import { StartedRun } from "../run/start";
 import { isRunning, statusName } from "../run/status";
 import { formatErrorMessage, console } from "../utils";
+import { Config } from "../config";
 
 export interface FinishedRun {
   runId: String;
@@ -19,12 +20,20 @@ const MAX_CONSECUTIVE_ERRORS = 5;
 
 export const waitForRunEnd = async (
   client: ApiClient,
+  config: Config,
   logger: Logger,
   startedRun: StartedRun
 ): Promise<FinishedRun> => {
   let runInfo: RunInformationResponse | undefined;
   let oldStatus: number = -1;
   let consecutiveErrorsCount = 0;
+
+  const refreshConstantMillis = config.runSummaryRefreshDelay.constant * 1000;
+  const refreshMaxMillis = config.runSummaryRefreshDelay.max * 1000;
+  let lastSummaryDisplayMillis = hrtimeMillis();
+  let refreshPower = -1;
+  let refreshIntervalMillis: number | undefined;
+
   do {
     try {
       await setTimeout(5000); // Initial delay even on first iteration because run duration might not be populated yet
@@ -32,22 +41,24 @@ export const waitForRunEnd = async (
       const statusMsg = `Run status is now ${statusName(runInfo.status)} [${runInfo.status}]`;
       runInfo.status !== oldStatus ? logger.log(statusMsg) : logger.debug(statusMsg);
       oldStatus = runInfo.status;
-      if (runInfo.injectStart > 0) {
-        await getAndLogMetricsSummary(client, logger, runInfo);
+
+      if (config.runSummaryRefreshDelay.enable && runInfo.injectStart > 0) {
+        const refreshCurrentTime = hrtimeMillis();
+        if (!refreshIntervalMillis || refreshCurrentTime - lastSummaryDisplayMillis >= refreshIntervalMillis) {
+          refreshPower++;
+          refreshIntervalMillis = Math.min(
+            refreshConstantMillis * Math.pow(config.runSummaryRefreshDelay.base, refreshPower),
+            refreshMaxMillis
+          );
+          const displayedRefreshInterval = Math.ceil(refreshIntervalMillis / 5000) * 5000; // Round up to nearest 5 seconds as it's our max resolution
+          await getAndLogMetricsSummary(client, logger, runInfo, displayedRefreshInterval);
+          lastSummaryDisplayMillis = refreshCurrentTime;
+        }
       }
       consecutiveErrorsCount = 0;
     } catch (error) {
       consecutiveErrorsCount++;
-      if (consecutiveErrorsCount < MAX_CONSECUTIVE_ERRORS) {
-        const msg = formatErrorMessage(error);
-        logger.log(
-          console.yellow(
-            `Failed to retrieve current run information (attempt ${consecutiveErrorsCount}/${MAX_CONSECUTIVE_ERRORS}): ${msg}`
-          )
-        );
-      } else {
-        throw error;
-      }
+      handleError(logger, error, consecutiveErrorsCount);
     }
   } while (runInfo === undefined || isRunning(runInfo.status));
   return {
@@ -56,4 +67,23 @@ export const waitForRunEnd = async (
     statusName: statusName(runInfo.status),
     assertions: runInfo.assertions
   };
+};
+
+/**
+ * Current time in milliseconds. Start time is arbitrary, but value should not be subject to system clock drift.
+ * See https://nodejs.org/api/process.html#processhrtimetime.
+ */
+const hrtimeMillis = (): number => Number(process.hrtime.bigint() / 1_000_000n);
+
+const handleError = (logger: Logger, error: any, errorCount: number) => {
+  if (errorCount < MAX_CONSECUTIVE_ERRORS) {
+    const msg = formatErrorMessage(error);
+    logger.log(
+      console.yellow(
+        `Failed to retrieve current run information (attempt ${errorCount}/${MAX_CONSECUTIVE_ERRORS}): ${msg}`
+      )
+    );
+  } else {
+    throw error;
+  }
 };

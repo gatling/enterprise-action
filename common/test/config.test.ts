@@ -3,7 +3,8 @@ import {
   configKeysInputValidation,
   overrideLoadGeneratorsInputValidation,
   requiredBooleanValidation,
-  uuidValidation
+  uuidValidation,
+  parseNumberValidation
 } from "@src/config";
 
 test("requiredBooleanValidation", () => {
@@ -81,4 +82,26 @@ test("hostsByPoolInputValidation", () => {
     false
   );
   expect(overrideLoadGeneratorsInputValidation.validate('"bcf62ac8-90a0-4be7-acd0-d7e87e3cbd66"').ok).toBe(false);
+});
+
+test("parseNumberValidation", () => {
+  const zeroRes = parseNumberValidation().validate("0");
+  expect(zeroRes.ok && zeroRes.value).toStrictEqual(0);
+
+  const floatRes = parseNumberValidation().validate("4.2");
+  expect(floatRes.ok && floatRes.value).toStrictEqual(4.2);
+
+  const integerRes = parseNumberValidation().validate("42");
+  expect(integerRes.ok && integerRes.value).toStrictEqual(42);
+
+  const aboveMinRes = parseNumberValidation(5).validate("5.1");
+  expect(aboveMinRes.ok && aboveMinRes.value).toStrictEqual(5.1);
+
+  const expRes = parseNumberValidation().validate("1.23e5");
+  expect(expRes.ok && expRes.value).toStrictEqual(123000);
+
+  expect(parseNumberValidation().validate("").ok).toBe(false);
+  expect(parseNumberValidation().validate("foo").ok).toBe(false);
+  expect(parseNumberValidation(5).validate("4.9").ok).toBe(false);
+  expect(parseNumberValidation(5).validate("-5.1").ok).toBe(false);
 });

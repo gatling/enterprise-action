@@ -1,6 +1,7 @@
 import { Validator } from "idonttrustlikethat";
 
 import { config, Logger, ApiClientConfig } from "@gatling-enterprise-runner/common";
+import { RunSummaryRefreshDelay } from "@gatling-enterprise-runner/common/dist/config";
 
 export interface DockerConfig extends config.Config {
   outputDotEnvPath: string | undefined;
@@ -14,11 +15,10 @@ export const readConfig = (logger: Logger): DockerConfig => {
     run: getRunConfig(),
     failActionOnRunFailure: getFailActionOnRunFailureConfig(),
     waitForRunEnd: getWaitForRunEnd(),
+    runSummaryRefreshDelay: getRunSummaryRefreshDelay(),
     outputDotEnvPath: getOutputDotEnvPath()
   };
-  logger.debug(
-    "Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run })
-  );
+  logger.debug("Parsed configuration: " + JSON.stringify({ ...config, api: { ...config.api, apiToken: "*****" } }));
   return config;
 };
 
@@ -43,6 +43,36 @@ const getFailActionOnRunFailureConfig = (): boolean =>
 
 const getWaitForRunEnd = (): boolean =>
   getValidatedInput("WAIT_FOR_RUN_END", config.requiredBooleanValidation, "WAIT_FOR_RUN_END is required", "true");
+
+const getRunSummaryRefreshDelay = (): RunSummaryRefreshDelay => {
+  const enable = getValidatedInput(
+    "RUN_SUMMARY_ENABLE",
+    config.requiredBooleanValidation,
+    "RUN_SUMMARY_ENABLE is required",
+    "true"
+  );
+  const getDelayInput = (name: string, validator: Validator<number>, minValue: number, defaultValue: string) =>
+    getValidatedInput(name, validator, `${name} must be a valid number, at least ${minValue}`, defaultValue);
+  const constant = getDelayInput(
+    "RUN_SUMMARY_REFRESH_DELAY_CONSTANT",
+    config.runSummaryRefreshDelayConstantValidation,
+    config.runSummaryRefreshDelayConstantMinValue,
+    "5"
+  );
+  const base = getDelayInput(
+    "RUN_SUMMARY_REFRESH_DELAY_MULTIPLIER",
+    config.runSummaryRefreshDelayMultiplierValidation,
+    config.runSummaryRefreshDelayMultiplierMinValue,
+    "2"
+  );
+  const max = getDelayInput(
+    "RUN_SUMMARY_REFRESH_DELAY_MAX",
+    config.runSummaryRefreshDelayMaxValidation,
+    config.runSummaryRefreshDelayMaxMinValue,
+    "300"
+  );
+  return { enable, constant, base, max };
+};
 
 const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
   const apiToken = getValidatedInput(

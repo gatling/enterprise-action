@@ -10,11 +10,10 @@ export const readConfig = (logger: Logger): config.Config => {
     api: getApiConfig(gatlingEnterpriseUrl),
     run: getRunConfig(),
     failActionOnRunFailure: getFailActionOnRunFailureConfig(),
-    waitForRunEnd: getWaitForRunEnd()
+    waitForRunEnd: getWaitForRunEnd(),
+    runSummaryRefreshDelay: getRunSummaryRefreshDelay()
   };
-  logger.debug(
-    "Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run })
-  );
+  logger.debug("Parsed configuration: " + JSON.stringify({ ...config, api: { ...config.api, apiToken: "*****" } }));
   return config;
 };
 
@@ -30,6 +29,32 @@ const getFailActionOnRunFailureConfig = (): boolean =>
 
 const getWaitForRunEnd = (): boolean =>
   getValidatedInput("wait_for_run_end", config.requiredBooleanValidation, "wait_for_run_end is required");
+
+const getRunSummaryRefreshDelay = (): config.RunSummaryRefreshDelay => {
+  const enable = getValidatedInput(
+    "run_summary_enable",
+    config.requiredBooleanValidation,
+    "run_summary_enable is required"
+  );
+  const getDelayInput = (name: string, validator: Validator<number>, minValue: number) =>
+    getValidatedInput(name, validator, `${name} must be a valid number, at least ${minValue}`);
+  const constant = getDelayInput(
+    "run_summary_refresh_delay_constant",
+    config.runSummaryRefreshDelayConstantValidation,
+    config.runSummaryRefreshDelayConstantMinValue
+  );
+  const base = getDelayInput(
+    "run_summary_refresh_delay_multiplier",
+    config.runSummaryRefreshDelayMultiplierValidation,
+    config.runSummaryRefreshDelayMultiplierMinValue
+  );
+  const max = getDelayInput(
+    "run_summary_refresh_delay_max",
+    config.runSummaryRefreshDelayMaxValidation,
+    config.runSummaryRefreshDelayMaxMinValue
+  );
+  return { enable, constant, base, max };
+};
 
 const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
   const apiToken = getValidatedInput(

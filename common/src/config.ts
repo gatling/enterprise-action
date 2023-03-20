@@ -7,6 +7,7 @@ export interface Config {
   run: RunConfig;
   failActionOnRunFailure: boolean;
   waitForRunEnd: boolean;
+  runSummaryRefreshDelay: RunSummaryRefreshDelay;
 }
 
 export interface RunConfig {
@@ -19,6 +20,13 @@ export interface RunConfig {
 export interface LoadGeneratorConfiguration {
   size: number;
   weight?: number;
+}
+
+export interface RunSummaryRefreshDelay {
+  enable: boolean;
+  constant: number;
+  base: number;
+  max: number;
 }
 
 export const requiredInputValidation = string.filter((str) => str !== "");
@@ -56,3 +64,24 @@ const overrideLoadGeneratorsValidation = jsonValidation.then(
 export const overrideLoadGeneratorsInputValidation = optionalInputValidation.then(
   overrideLoadGeneratorsValidation.optional()
 );
+
+export const parseNumberValidation = (minValue?: number) =>
+  requiredInputValidation.and((str) => {
+    const parsedValue = parseFloat(str);
+    if (isNaN(parsedValue)) {
+      return Err(`Invalid integer value: ${str}`);
+    } else if (minValue && parsedValue < minValue) {
+      return Err(`Minimum value: ${minValue}`);
+    } else {
+      return Ok(parsedValue);
+    }
+  });
+
+export const runSummaryRefreshDelayConstantMinValue = 5;
+export const runSummaryRefreshDelayMultiplierMinValue = 1;
+export const runSummaryRefreshDelayMaxMinValue = 5;
+export const runSummaryRefreshDelayConstantValidation = parseNumberValidation(runSummaryRefreshDelayConstantMinValue);
+export const runSummaryRefreshDelayMultiplierValidation = parseNumberValidation(
+  runSummaryRefreshDelayMultiplierMinValue
+);
+export const runSummaryRefreshDelayMaxValidation = parseNumberValidation(runSummaryRefreshDelayMaxMinValue);
