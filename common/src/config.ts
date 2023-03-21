@@ -22,7 +22,7 @@ export interface LoadGeneratorConfiguration {
 }
 
 export const requiredInputValidation = string.filter((str) => str !== "");
-const optionalInputValidation = string.map((str) => (str === "" ? undefined : str));
+export const optionalInputValidation = string.map((str) => (str === "" ? undefined : str));
 export const requiredBooleanValidation = requiredInputValidation.and((str) => {
   const lowerCaseStr = str.toLowerCase();
   return lowerCaseStr === "true"

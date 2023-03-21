@@ -2,13 +2,14 @@ import { apiClient } from "./client/apiClient";
 import { Assertion } from "./client/responses/runInformationResponse";
 import { Config } from "./config";
 import { Logger, bright, green, red } from "./log";
+import { Output } from "./output";
 import { FinishedRun, waitForRunEnd } from "./run/ongoing";
 import { StartedRun, startRun } from "./run/start";
 import { isSuccessful } from "./run/status";
 import { StateStore } from "./state";
 import { formatErrorMessage } from "./utils/error";
 
-const run = async (logger: Logger, config: Config, state: StateStore): Promise<void> => {
+const run = async (output: Output, logger: Logger, config: Config, state: StateStore): Promise<void> => {
   try {
     // Do not re-run the main action when launched again later
     state.setFinished();
@@ -21,9 +22,9 @@ const run = async (logger: Logger, config: Config, state: StateStore): Promise<v
     state.setRunning(startedRun.runId); // Run started, cleanup will be needed if interrupted now
     logStart(logger, config, startedRun);
 
-    logger.setOutput("run_id", startedRun.runId);
-    logger.setOutput("reports_url", startedRun.reportsUrl);
-    logger.setOutput("runs_url", startedRun.runsUrl);
+    await output.set("run_id", startedRun.runId);
+    await output.set("reports_url", startedRun.reportsUrl);
+    await output.set("runs_url", startedRun.runsUrl);
 
     if (config.waitForRunEnd) {
       const finishedRun = await waitForRunEnd(client, logger, startedRun);
@@ -31,14 +32,15 @@ const run = async (logger: Logger, config: Config, state: StateStore): Promise<v
       logAssertionResults(logger, finishedRun.assertions);
       logResult(logger, config, startedRun, finishedRun);
 
-      logger.setOutput("run_status_code", finishedRun.statusCode);
-      logger.setOutput("run_status_name", finishedRun.statusName);
-      logger.setOutput("run_assertions", finishedRun.assertions);
+      await output.set("run_status_code", finishedRun.statusCode);
+      await output.set("run_status_name", finishedRun.statusName);
+      await output.set("run_assertions", finishedRun.assertions);
 
       // Should use run_status_code/run_status_name (without 's', this refers to only one run)
       // runs_status_code/runs_status_name are kept for backward compatibility since 1.0, can be removed in 2.x
-      logger.setOutput("runs_status_code", finishedRun.statusCode);
-      logger.setOutput("runs_status_name", finishedRun.statusName);
+      await output.set("runs_status_code", finishedRun.statusCode);
+      await output.set("runs_status_name", finishedRun.statusName);
+      await output.set("runs_status_code", finishedRun.statusCode);
     } else {
       state.setFinished(); // Not waiting for run end, no cleanup needed
     }

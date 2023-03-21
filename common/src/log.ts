@@ -5,7 +5,6 @@ export interface Logger {
   annotateNotice: (message: string, title?: string) => void;
   annotateWarning: (message: string, title?: string) => void;
   annotateError: (message: string, title?: string) => void;
-  setOutput: (name: string, value: any) => void;
 }
 
 export const bright = (text: string): string => "\u001b[37;1m" + text + "\u001b[0m";
