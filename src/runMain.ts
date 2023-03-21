@@ -31,9 +31,14 @@ const run = async (): Promise<void> => {
       logAssertionResults(finishedRun.assertions);
       logResult(config, startedRun, finishedRun);
 
+      core.setOutput("run_status_code", finishedRun.statusCode);
+      core.setOutput("run_status_name", finishedRun.statusName);
+      core.setOutput("run_assertions", finishedRun.assertions);
+
+      // Should use run_status_code/run_status_name (without 's', this refers to only one run)
+      // runs_status_code/runs_status_name are kept for backward compatibility since 1.0, can be removed in 2.x
       core.setOutput("runs_status_code", finishedRun.statusCode);
       core.setOutput("runs_status_name", finishedRun.statusName);
-      core.setOutput("run_assertions", finishedRun.assertions);
     } else {
       setPostStatusState("post_noop"); // Not waiting for run end, no cleanup needed
     }
