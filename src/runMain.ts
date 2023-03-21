@@ -44,12 +44,8 @@ const run = async (): Promise<void> => {
 
 const logStart = (config: ActionConfig, startedRun: StartedRun): void => {
   log(bright(`Started run ${startedRun.runId} for simulation ${config.run.simulationId}`));
-  if (startedRun.reportsUrl) {
-    annotateNotice(`Run reports will be available at ${startedRun.reportsUrl}`, "Gatling Enterprise reports");
-  }
-  if (startedRun.runsUrl) {
-    annotateNotice(`Runs history is available at ${startedRun.runsUrl}`, "Gatling Enterprise runs history");
-  }
+  annotateNotice(`Run reports will be available at ${startedRun.reportsUrl}`, "Gatling Enterprise reports");
+  annotateNotice(`Runs history is available at ${startedRun.runsUrl}`, "Gatling Enterprise runs history");
   log("");
 };
 
@@ -92,12 +88,8 @@ const logResult = (config: ActionConfig, startedRun: StartedRun, finishedRun: Fi
   }
 
   log("");
-  if (startedRun.reportsUrl) {
-    log(bright(`See the run reports at ${startedRun.reportsUrl}`));
-  }
-  if (startedRun.runsUrl) {
-    log(bright(`See the runs history at ${startedRun.runsUrl}`));
-  }
+  log(bright(`See the run reports at ${startedRun.reportsUrl}`));
+  log(bright(`See the runs history at ${startedRun.runsUrl}`));
 };
 
 export default run;
