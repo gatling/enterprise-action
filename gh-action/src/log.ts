@@ -24,16 +24,11 @@ const annotateError = (message: string, title?: string): void => {
   core.error(message, { title });
 };
 
-const setOutput = (name: string, value: any): void => {
-  core.setOutput(name, value);
-};
-
-export const logger: Logger = {
+export const gitHubLogger: Logger = {
   debug,
   log,
   group,
   annotateNotice,
   annotateWarning,
-  annotateError,
-  setOutput
+  annotateError
 };

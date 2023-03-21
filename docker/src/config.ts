@@ -8,18 +8,24 @@ import {
   requiredBooleanValidation,
   uuidValidation,
   configKeysInputValidation,
-  overrideLoadGeneratorsInputValidation
+  overrideLoadGeneratorsInputValidation,
+  optionalInputValidation
 } from "@gatling-enterprise-runner/common/src/config";
 import { Logger } from "@gatling-enterprise-runner/common/src/log";
 
-export const readConfig = (logger: Logger): Config => {
+export interface DockerConfig extends Config {
+  outputDotEnvPath: string | undefined;
+}
+
+export const readConfig = (logger: Logger): DockerConfig => {
   const gatlingEnterpriseUrl = getGatlingEnterpriseUrlConfig();
   const config = {
     gatlingEnterpriseUrl,
     api: getApiConfig(gatlingEnterpriseUrl),
     run: getRunConfig(),
     failActionOnRunFailure: getFailActionOnRunFailureConfig(),
-    waitForRunEnd: getWaitForRunEnd()
+    waitForRunEnd: getWaitForRunEnd(),
+    outputDotEnvPath: getOutputDotEnvPath()
   };
   logger.debug(
     "Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run })
@@ -34,6 +40,9 @@ const getGatlingEnterpriseUrlConfig = (): string =>
     "GATLING_ENTERPRISE_URL is required",
     "https://cloud.gatling.io"
   );
+
+const getOutputDotEnvPath = (): string | undefined =>
+  getValidatedInput("OUTPUT_DOT_ENV_FILE_PATH", optionalInputValidation, "");
 
 const getFailActionOnRunFailureConfig = (): boolean =>
   getValidatedInput(
