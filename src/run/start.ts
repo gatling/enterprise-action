@@ -3,8 +3,8 @@ import { ActionConfig } from "../config";
 
 export interface StartedRun {
   runId: string;
-  reportsUrl?: string;
-  runsUrl?: string;
+  reportsUrl: string;
+  runsUrl: string;
 }
 
 export const startRun = async (client: ApiClient, config: ActionConfig): Promise<StartedRun> => {
@@ -14,10 +14,15 @@ export const startRun = async (client: ApiClient, config: ActionConfig): Promise
     overrideHostsByPool: config.run.overrideLoadGenerators
   });
 
-  const reportsUrl = webAppUrl(config, response.reportsPath);
-  const runsUrl = webAppUrl(config, response.runsPath);
-  return { runId: response.runId, reportsUrl, runsUrl };
+  // Fallback URLs for Gatling Enterprise Self-Hosted
+  const reportsPath = response.reportsPath ?? `/simulations/reports/${response.runId}`;
+  const runsPath = response.runsPath ?? `/simulations/runs/${config.run.simulationId}`;
+
+  return {
+    runId: response.runId,
+    reportsUrl: webAppUrl(config, reportsPath),
+    runsUrl: webAppUrl(config, runsPath)
+  };
 };
 
-const webAppUrl = (config: ActionConfig, path?: string): string | undefined =>
-  path ? config.gatlingEnterpriseUrl + path : undefined;
+const webAppUrl = (config: ActionConfig, path: string): string => config.gatlingEnterpriseUrl + path;
