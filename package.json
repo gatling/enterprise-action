@@ -1,29 +1,22 @@
 {
-  "name": "gatling-enterprise-action",
-  "description": "Gatling Enterprise GitHub Action",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gatling/enterprise-action.git"
-  },
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/gatling/gatling/issues"
-  },
-  "homepage": "https://gatling.io/",
-  "main": "dist/index.js",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "common",
+    "gh-action",
+    "docker"
+  ],
+  "main": "gh-action/dist/index.js",
+  "packageManager": "yarn@3.3.0",
   "scripts": {
-    "ci": "yarn install --frozen-lockfile",
+    "setup-yarn": "yarn set version 3.3.0 && yarn config set nodeLinker node-modules && yarn plugin import workspace-tools",
+    "ci": "yarn run setup-yarn && yarn install --immutable",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
-    "package": "ncc build ./src/index.ts",
-    "start": "ncc run ./src/index.ts",
-    "test": "jest"
-  },
-  "dependencies": {
-    "@actions/core": "1.10.0",
-    "@actions/http-client": "2.1.0",
-    "date-fns": "2.29.3",
-    "idonttrustlikethat": "2.1.0"
+    "test": "yarn workspaces foreach run test",
+    "package": "yarn workspaces foreach run package",
+    "gh-action-start": "yarn workspace '@gatling-enterprise-runner/gh-action' run start",
+    "docker-runner-start": "yarn workspace '@gatling-enterprise-runner/docker' run start"
   },
   "devDependencies": {
     "@types/node": "16.18.18",

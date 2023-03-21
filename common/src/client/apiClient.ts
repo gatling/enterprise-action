@@ -1,13 +1,13 @@
-import * as http from "@actions/http-client";
+import { HttpClient, HttpClientError, HttpCodes } from "@actions/http-client";
+import { TypedResponse } from "@actions/http-client/lib/interfaces";
+import { OutgoingHttpHeaders } from "http";
+
 import { StartSimulationRequest } from "./requests/startSimulationRequest";
 import { StartSimulationResponse } from "./responses/startSimulationResponse";
-import { TypedResponse } from "@actions/http-client/lib/interfaces";
-import { HttpClientError, HttpCodes } from "@actions/http-client";
 import { RunInformationResponse } from "./responses/runInformationResponse";
 import { SimulationResponse } from "./responses/simulationResponse";
 import { SeriesResponse } from "./responses/seriesResponse";
 import { RequestsSummaryResponse } from "./responses/requestsSummaryResponse";
-import { OutgoingHttpHeaders } from "http";
 
 export interface ApiClientConfig {
   baseUrl: string;
@@ -25,7 +25,7 @@ export interface ApiClient {
 }
 
 export const apiClient = (conf: ApiClientConfig): ApiClient => {
-  const client = new http.HttpClient();
+  const client = new HttpClient();
   return {
     startSimulation: (simulationId, options) =>
       postJson(client, conf, "/simulations/start", options ?? {}, { simulation: simulationId }),
@@ -48,7 +48,7 @@ const seriesParams = (runId: string, scenario: string) => ({
   metric: "usrActive"
 });
 
-const abortRun = async (client: http.HttpClient, conf: ApiClientConfig, runId: string): Promise<boolean> => {
+const abortRun = async (client: HttpClient, conf: ApiClientConfig, runId: string): Promise<boolean> => {
   try {
     await postJson(client, conf, "/simulations/abort", {}, { run: runId });
     return true;
@@ -64,7 +64,7 @@ const abortRun = async (client: http.HttpClient, conf: ApiClientConfig, runId: s
   }
 };
 
-const checkCloudCompatibility = async (client: http.HttpClient, conf: ApiClientConfig): Promise<void> => {
+const checkCloudCompatibility = async (client: HttpClient, conf: ApiClientConfig): Promise<void> => {
   const clientName = "gatling-enterprise-github-action";
   const version = "0.0.1";
   const response = await client.get(buildUrl(conf, "/compatibility", { clientName, version }), baseHeaders);
@@ -76,14 +76,14 @@ const checkCloudCompatibility = async (client: http.HttpClient, conf: ApiClientC
 };
 
 const getJson = <T>(
-  client: http.HttpClient,
+  client: HttpClient,
   conf: ApiClientConfig,
   path: string,
   params?: Record<string, string>
 ): Promise<T> => client.getJson<T>(buildUrl(conf, path, params), headers(conf)).then(handleJsonResponse);
 
 const postJson = <T>(
-  client: http.HttpClient,
+  client: HttpClient,
   conf: ApiClientConfig,
   path: string,
   payload: any,

@@ -1,13 +1,14 @@
-import { ApiClient } from "../client/apiClient";
 import { format } from "date-fns";
-import { RunInformationResponse } from "../client/responses/runInformationResponse";
-import { RequestsSummaryChild } from "../client/responses/requestsSummaryResponse";
-import { formatDuration } from "../utils/duration";
-import { logGroup } from "../utils/log";
 
-export const getAndLogMetricsSummary = async (client: ApiClient, runInfo: RunInformationResponse) => {
+import { ApiClient } from "../client/apiClient";
+import { RequestsSummaryChild } from "../client/responses/requestsSummaryResponse";
+import { RunInformationResponse } from "../client/responses/runInformationResponse";
+import { Logger } from "../log";
+import { formatDuration } from "../utils/duration";
+
+export const getAndLogMetricsSummary = async (client: ApiClient, logger: Logger, runInfo: RunInformationResponse) => {
   const metricsSummary = await getMetricsSummary(client, runInfo);
-  logMetricsSummary(metricsSummary);
+  logMetricsSummary(logger, metricsSummary);
 };
 
 const getMetricsSummary = async (client: ApiClient, runInfo: RunInformationResponse): Promise<MetricsSummary> => {
@@ -52,9 +53,9 @@ const recursivelyGetChildren = (children: RequestsSummaryChild[]): ChildMetric[]
         }
   );
 
-const logMetricsSummary = (summary: MetricsSummary) => {
-  logGroup(
-    `Time: ${summary.date}, ${summary.duration} elapsed\n`,
+const logMetricsSummary = (logger: Logger, summary: MetricsSummary) => {
+  logger.group(
+    `Time: ${summary.date}, ${summary.duration} elapsed`,
     (summary.nbUsers > 0 ? `Number of concurrent users: ${summary.nbUsers}\n` : "") +
       `Number of requests: ${summary.nbRequest}\n` +
       `Number of requests per seconds: ${summary.requestsSeconds}\n` +
