@@ -1,5 +1,5 @@
 import { ApiClient } from "../client/apiClient";
-import { ActionConfig } from "../config";
+import { Config } from "../config";
 
 export interface StartedRun {
   runId: string;
@@ -7,7 +7,7 @@ export interface StartedRun {
   runsUrl: string;
 }
 
-export const startRun = async (client: ApiClient, config: ActionConfig): Promise<StartedRun> => {
+export const startRun = async (client: ApiClient, config: Config): Promise<StartedRun> => {
   const response = await client.startSimulation(config.run.simulationId, {
     extraSystemProperties: config.run.extraSystemProperties,
     extraEnvironmentVariables: config.run.extraEnvironmentVariables,
@@ -25,4 +25,4 @@ export const startRun = async (client: ApiClient, config: ActionConfig): Promise
   };
 };
 
-const webAppUrl = (config: ActionConfig, path: string): string => config.gatlingEnterpriseUrl + path;
+const webAppUrl = (config: Config, path: string): string => config.gatlingEnterpriseUrl + path;

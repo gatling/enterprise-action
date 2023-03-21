@@ -1,18 +1,15 @@
 {
+  "exclude": [
+    "**/dist/**",
+    "**/lib/**"
+  ],
+  "references": [
+    { "path": "./common" },
+    { "path": "./gh-action" },
+    { "path": "./docker" }
+  ],
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./lib",
-    "rootDir": "./src",
-    "paths": {
-      "@src/*": ["src/*"]
-    },
-    "lib": ["ES2021"],
-    "module": "CommonJS",
-    "target": "ES2021",
-    "esModuleInterop": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
-  },
-  "exclude": ["node_modules", "**/*.test.ts", "jest.config.ts"]
+  }
 }

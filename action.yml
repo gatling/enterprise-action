@@ -46,5 +46,5 @@ outputs:
     description: 'The results of the run''s assertions, as a JSON array.'
 runs:
   using: 'node16'
-  main: 'dist/index.js'
-  post: 'dist/index.js'
+  main: 'gh-action/dist/index.js'
+  post: 'gh-action/dist/index.js'

@@ -4,7 +4,7 @@ import {
   overrideLoadGeneratorsInputValidation,
   requiredBooleanValidation,
   uuidValidation
-} from "../src/config";
+} from "@src/config";
 
 test("requiredBooleanValidation", () => {
   expect(requiredBooleanValidation.validate("").ok).toBe(false);

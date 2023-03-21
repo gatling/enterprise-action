@@ -1,40 +1,30 @@
 import * as core from "@actions/core";
-import { ApiClientConfig } from "./client/apiClient";
-import { boolean, string, dictionary, object, number, union, Validator, Ok, Err, Result } from "idonttrustlikethat";
-import { logDebug } from "./utils/log";
+import { Validator } from "idonttrustlikethat";
 
-export interface ActionConfig {
-  gatlingEnterpriseUrl: string;
-  api: ApiClientConfig;
-  run: RunConfig;
-  failActionOnRunFailure: boolean;
-  waitForRunEnd: boolean;
-}
+import { ApiClientConfig } from "@gatling-enterprise-runner/common/src/client/apiClient";
+import {
+  Config,
+  RunConfig,
+  requiredInputValidation,
+  requiredBooleanValidation,
+  uuidValidation,
+  configKeysInputValidation,
+  overrideLoadGeneratorsInputValidation
+} from "@gatling-enterprise-runner/common/src/config";
+import { Logger } from "@gatling-enterprise-runner/common/src/log";
 
-export interface RunConfig {
-  simulationId: string;
-  extraSystemProperties?: Record<string, string>;
-  extraEnvironmentVariables?: Record<string, string>;
-  overrideLoadGenerators?: Record<string, LoadGeneratorConfiguration>;
-}
-
-export interface LoadGeneratorConfiguration {
-  size: number;
-  weight?: number;
-}
-
-export const readConfig = (): ActionConfig => {
+export const readConfig = (logger: Logger): Config => {
   const gatlingEnterpriseUrl = getGatlingEnterpriseUrlConfig();
-  const failActionOnRunFailure = getFailActionOnRunFailureConfig();
-  const waitForRunEnd = getWaitForRunEnd();
   const config = {
     gatlingEnterpriseUrl,
     api: getApiConfig(gatlingEnterpriseUrl),
     run: getRunConfig(),
-    failActionOnRunFailure,
-    waitForRunEnd
+    failActionOnRunFailure: getFailActionOnRunFailureConfig(),
+    waitForRunEnd: getWaitForRunEnd()
   };
-  logDebug("Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run }));
+  logger.debug(
+    "Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run })
+  );
   return config;
 };
 
@@ -84,42 +74,6 @@ const getRunConfig = (): RunConfig => {
     overrideLoadGenerators: overrideLoadGenerators
   };
 };
-
-const requiredInputValidation = string.filter((str) => str !== "");
-const optionalInputValidation = string.map((str) => (str === "" ? undefined : str));
-export const requiredBooleanValidation = requiredInputValidation.and((str) => {
-  const lowerCaseStr = str.toLowerCase();
-  return lowerCaseStr === "true"
-    ? Ok(true)
-    : lowerCaseStr === "false"
-    ? Ok(false)
-    : Err(`Invalid boolean value: ${str}`);
-});
-export const uuidValidation = string.filter((str) =>
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str)
-);
-export const jsonValidation = string.and((str): Result<string, any> => {
-  try {
-    return Ok(JSON.parse(str));
-  } catch (e) {
-    if (e instanceof Error) {
-      return Err(`Invalid JSON. ${e.name}: ${e.message}`);
-    }
-    throw e;
-  }
-});
-
-const configKeyValueValidation = union(string, number, boolean).map((value) =>
-  typeof value === "string" ? value : `${value}`
-);
-const configKeysValidation = jsonValidation.then(dictionary(string, configKeyValueValidation));
-export const configKeysInputValidation = optionalInputValidation.then(configKeysValidation.optional());
-const overrideLoadGeneratorsValidation = jsonValidation.then(
-  dictionary(uuidValidation, object({ size: number, weight: number.optional() }))
-);
-export const overrideLoadGeneratorsInputValidation = optionalInputValidation.then(
-  overrideLoadGeneratorsValidation.optional()
-);
 
 const getValidatedInput = <T>(name: string, validator: Validator<T>, errorMessage: string, envVarName?: string) => {
   const rawInput = core.getInput(name);

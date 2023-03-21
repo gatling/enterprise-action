@@ -14,12 +14,6 @@ Build the project:
 yarn package
 ```
 
-Run locally (input can be passed with environment variables, e.g. use `INPUT_FOO` for the input named `foo`):
-
-```shell
-yarn start
-```
-
 Run tests:
 
 ```shell
@@ -32,7 +26,15 @@ Format code:
 yarn format
 ```
 
-## Run locally with `act`
+## Run gh-action locally
+
+Run locally (input can be passed with environment variables, e.g. use `INPUT_FOO` for the input named `foo`):
+
+```shell
+yarn gh-action-start
+```
+
+### Run locally with `act`
 
 `act` allows to run workflows locally in an environment similar to a real GitHub Actions environment. See [the act README](https://github.com/nektos/act) for installation instructions.
 
