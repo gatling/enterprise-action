@@ -30,3 +30,10 @@ jobs:
           yarn format-check
           yarn test
           yarn package
+
+      - name: Build Docker image
+        working-directory: ./docker
+        run: |
+          docker build \
+            --tag "gatlingcorp/enterprise-runner:latest" \
+            .
