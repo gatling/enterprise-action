@@ -1,6 +1,6 @@
 export { runCleanup } from "./runCleanup";
 export { runMain } from "./runMain";
-export { Output } from "./output";
+export { Output, OutputKey } from "./output";
 export { StateStore } from "./state";
 export { Logger } from "./log";
 export { ApiClientConfig } from "./client/apiClient";
