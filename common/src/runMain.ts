@@ -37,12 +37,6 @@ export const runMain = async (output: Output, logger: Logger, config: Config, st
       await output.set("run_status_code", finishedRun.statusCode);
       await output.set("run_status_name", finishedRun.statusName);
       await output.set("run_assertions", finishedRun.assertions);
-
-      // Should use run_status_code/run_status_name (without 's', this refers to only one run)
-      // runs_status_code/runs_status_name are kept for backward compatibility since 1.0, can be removed in 2.x
-      await output.set("runs_status_code", finishedRun.statusCode);
-      await output.set("runs_status_name", finishedRun.statusName);
-      await output.set("runs_status_code", finishedRun.statusCode);
     } else {
       state.setFinished(); // Not waiting for run end, no cleanup needed
     }
