@@ -1,4 +1,4 @@
-import { setTimeout } from "timers/promises";
+import { setInterval } from "timers/promises";
 
 import { ApiClient } from "../client/apiClient";
 import { Assertion, RunInformationResponse } from "../client/responses/runInformationResponse";
@@ -17,8 +17,27 @@ export interface FinishedRun {
 }
 
 const MAX_CONSECUTIVE_ERRORS = 5;
+const REFRESH_DELAY_MILLIS = 5000;
 
 export const waitForRunEnd = async (
+  client: ApiClient,
+  config: Config,
+  logger: Logger,
+  startedRun: StartedRun
+): Promise<FinishedRun> => {
+  const cancelInterval = new AbortController();
+  const intervalIterator = setInterval(REFRESH_DELAY_MILLIS, undefined, { signal: cancelInterval.signal })[
+    Symbol.asyncIterator
+  ]();
+  try {
+    return await waitForRunEndLoop(intervalIterator, client, config, logger, startedRun);
+  } finally {
+    cancelInterval.abort();
+  }
+};
+
+const waitForRunEndLoop = async (
+  intervalIterator: AsyncIterator<unknown>,
   client: ApiClient,
   config: Config,
   logger: Logger,
@@ -30,29 +49,35 @@ export const waitForRunEnd = async (
 
   const refreshConstantMillis = config.runSummaryRefreshDelay.constant * 1000;
   const refreshMaxMillis = config.runSummaryRefreshDelay.max * 1000;
-  let lastSummaryDisplayMillis = hrtimeMillis();
+  let lastSummaryDisplayMillis = -1;
   let refreshPower = -1;
-  let refreshIntervalMillis: number | undefined;
-
+  let refreshIntervalMillis = refreshConstantMillis;
+  let iterationsSinceRunStart = 0;
   do {
     try {
-      await setTimeout(5000); // Initial delay even on first iteration because run duration might not be populated yet
+      await intervalIterator.next(); // Initial delay even on first iteration because run duration might not be populated yet
+
       runInfo = await client.getRunInformation(startedRun.runId);
       const statusMsg = `Run status is now ${statusName(runInfo.status)} [${runInfo.status}]`;
       runInfo.status !== oldStatus ? logger.log(statusMsg) : logger.debug(statusMsg);
       oldStatus = runInfo.status;
 
       if (config.runSummaryRefreshDelay.enable && runInfo.injectStart > 0) {
-        const refreshCurrentTime = hrtimeMillis();
-        if (!refreshIntervalMillis || refreshCurrentTime - lastSummaryDisplayMillis >= refreshIntervalMillis) {
+        iterationsSinceRunStart++;
+        const elapsedTimeMillis = iterationsSinceRunStart * REFRESH_DELAY_MILLIS;
+        logger.debug(`elapsedTimeMillis=${elapsedTimeMillis}`);
+        logger.debug(`lastSummaryDisplayMillis=${lastSummaryDisplayMillis}`);
+        logger.debug(`refreshIntervalMillis=${refreshIntervalMillis}`);
+        if (elapsedTimeMillis - lastSummaryDisplayMillis >= refreshIntervalMillis) {
           refreshPower++;
           refreshIntervalMillis = Math.min(
             refreshConstantMillis * Math.pow(config.runSummaryRefreshDelay.base, refreshPower),
             refreshMaxMillis
           );
-          const displayedRefreshInterval = Math.ceil(refreshIntervalMillis / 5000) * 5000; // Round up to nearest 5 seconds as it's our max resolution
-          await getAndLogMetricsSummary(client, logger, runInfo, displayedRefreshInterval);
-          lastSummaryDisplayMillis = refreshCurrentTime;
+          const displayedRefreshInterval =
+            Math.ceil(refreshIntervalMillis / REFRESH_DELAY_MILLIS) * REFRESH_DELAY_MILLIS; // Round up to nearest 5 seconds as it's our max resolution
+          await getAndLogMetricsSummary(client, logger, runInfo, elapsedTimeMillis, displayedRefreshInterval);
+          lastSummaryDisplayMillis = elapsedTimeMillis;
         }
       }
       consecutiveErrorsCount = 0;
@@ -61,6 +86,7 @@ export const waitForRunEnd = async (
       handleError(logger, error, consecutiveErrorsCount);
     }
   } while (runInfo === undefined || isRunning(runInfo.status));
+
   return {
     runId: runInfo.runId,
     statusCode: runInfo.status,
@@ -68,12 +94,6 @@ export const waitForRunEnd = async (
     assertions: runInfo.assertions
   };
 };
-
-/**
- * Current time in milliseconds. Start time is arbitrary, but value should not be subject to system clock drift.
- * See https://nodejs.org/api/process.html#processhrtimetime.
- */
-const hrtimeMillis = (): number => Number(process.hrtime.bigint() / 1_000_000n);
 
 const handleError = (logger: Logger, error: any, errorCount: number) => {
   if (errorCount < MAX_CONSECUTIVE_ERRORS) {

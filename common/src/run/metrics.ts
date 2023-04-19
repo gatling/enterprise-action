@@ -10,10 +10,11 @@ export const getAndLogMetricsSummary = async (
   client: ApiClient,
   logger: Logger,
   runInfo: RunInformationResponse,
-  nextSummaryDelaySeconds: number
+  elapsedTimeMillis: number,
+  nextSummaryDelayMillis: number
 ) => {
   const metricsSummary = await getMetricsSummary(client, runInfo);
-  logMetricsSummary(logger, metricsSummary, nextSummaryDelaySeconds);
+  logMetricsSummary(logger, metricsSummary, elapsedTimeMillis, nextSummaryDelayMillis);
 };
 
 const getMetricsSummary = async (client: ApiClient, runInfo: RunInformationResponse): Promise<MetricsSummary> => {
@@ -58,9 +59,11 @@ const recursivelyGetChildren = (children: RequestsSummaryChild[]): ChildMetric[]
         }
   );
 
-const logMetricsSummary = (logger: Logger, summary: MetricsSummary, nextSummaryDelay: number) => {
+const logMetricsSummary = (logger: Logger, summary: MetricsSummary, elapsedTime: number, nextSummaryDelay: number) => {
   logger.group(
-    `Time: ${summary.date}, ${summary.duration} elapsed, next refresh in ${formatDuration(nextSummaryDelay)}`,
+    `Time: ${summary.date}, ${formatDuration(elapsedTime)} elapsed, next refresh in ${formatDuration(
+      nextSummaryDelay
+    )}`,
     (summary.nbUsers > 0 ? `Number of concurrent users: ${summary.nbUsers}\n` : "") +
       `Number of requests: ${summary.nbRequest}\n` +
       `Number of requests per seconds: ${summary.requestsSeconds}\n` +
