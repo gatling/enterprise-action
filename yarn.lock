@@ -947,10 +947,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:16.18.23":
-  version: 16.18.23
-  resolution: "@types/node@npm:16.18.23"
-  checksum: 00e51db28fc7a182747f37215b3f25400b1c7a8525e09fa14e55be5798891a118ebf636a49d3197335a3580fcb8222fd4ecc20c2ccff69f1c0d233fc5697465d
+"@types/node@npm:16.18.35":
+  version: 16.18.35
+  resolution: "@types/node@npm:16.18.35"
+  checksum: 68e3015eb24f009d2b5a7ad959d1e1090016847248f22242c520b75a2780eb19e2d212e775e68022ed474fac00bcc8edaebcd02712f1dfee542efa23e2a4027e
   languageName: node
   linkType: hard
 
@@ -3340,7 +3340,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
-    "@types/node": 16.18.23
+    "@types/node": 16.18.35
     "@vercel/ncc": 0.36.1
     jest: 29.5.0
     js-yaml: 4.1.0
