@@ -7,7 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@actions/http-client": "2.1.0",
+    "@actions/http-client": "2.1.1",
     "date-fns": "2.30.0",
     "idonttrustlikethat": "2.1.0"
   }
