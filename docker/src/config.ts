@@ -14,11 +14,10 @@ export const readConfig = (logger: Logger): DockerConfig => {
     run: getRunConfig(),
     failActionOnRunFailure: getFailActionOnRunFailureConfig(),
     waitForRunEnd: getWaitForRunEnd(),
+    runSummaryLoggingConfiguration: getRunSummaryLoggingConfiguration(),
     outputDotEnvPath: getOutputDotEnvPath()
   };
-  logger.debug(
-    "Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run })
-  );
+  logger.debug("Parsed configuration: " + JSON.stringify({ ...config, api: { ...config.api, apiToken: "*****" } }));
   return config;
 };
 
@@ -43,6 +42,33 @@ const getFailActionOnRunFailureConfig = (): boolean =>
 
 const getWaitForRunEnd = (): boolean =>
   getValidatedInput("WAIT_FOR_RUN_END", config.requiredBooleanValidation, "WAIT_FOR_RUN_END is required", "true");
+
+const getRunSummaryLoggingConfiguration = (): config.RunSummaryLoggingConfiguration => {
+  const enabled = getValidatedInput(
+    "RUN_SUMMARY_ENABLED",
+    config.requiredBooleanValidation,
+    "RUN_SUMMARY_ENABLED is required",
+    "true"
+  );
+  const getIntervalInput = (name: string, validator: Validator<number>, defaultValue: string) =>
+    getValidatedInput(name, validator, `${name} must be a positive number`, defaultValue);
+  const initialRefreshInterval = getIntervalInput(
+    "RUN_SUMMARY_INITIAL_REFRESH_INTERVAL",
+    config.runSummaryRefreshIntervalValidation,
+    "5"
+  );
+  const initialRefreshCount = getIntervalInput(
+    "RUN_SUMMARY_INITIAL_REFRESH_COUNT",
+    config.runSummaryInitialRefreshCountValidation,
+    "12"
+  );
+  const refreshInterval = getIntervalInput(
+    "RUN_SUMMARY_REFRESH_INTERVAL",
+    config.runSummaryRefreshIntervalValidation,
+    "60"
+  );
+  return { enabled, initialRefreshInterval, initialRefreshCount, refreshInterval };
+};
 
 const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
   const apiToken = getValidatedInput(

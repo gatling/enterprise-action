@@ -4,11 +4,17 @@ import { ApiClient } from "../client/apiClient";
 import { RequestsSummaryChild } from "../client/responses/requestsSummaryResponse";
 import { RunInformationResponse } from "../client/responses/runInformationResponse";
 import { Logger } from "../log";
-import { formatDuration } from "../utils";
+import { formatDuration, formatDurationDiff } from "../utils";
 
-export const getAndLogMetricsSummary = async (client: ApiClient, logger: Logger, runInfo: RunInformationResponse) => {
+export const getAndLogMetricsSummary = async (
+  client: ApiClient,
+  logger: Logger,
+  runInfo: RunInformationResponse,
+  elapsedTimeMillis: number,
+  nextSummaryDelayMillis: number
+) => {
   const metricsSummary = await getMetricsSummary(client, runInfo);
-  logMetricsSummary(logger, metricsSummary);
+  logMetricsSummary(logger, metricsSummary, elapsedTimeMillis, nextSummaryDelayMillis);
 };
 
 const getMetricsSummary = async (client: ApiClient, runInfo: RunInformationResponse): Promise<MetricsSummary> => {
@@ -19,7 +25,7 @@ const getMetricsSummary = async (client: ApiClient, runInfo: RunInformationRespo
 
   const currentTimestamp = Date.now();
   const date = format(currentTimestamp, "yyyy-MM-dd HH:mm:ss");
-  const duration = formatDuration(runInfo.injectStart, currentTimestamp);
+  const duration = formatDurationDiff(runInfo.injectStart, currentTimestamp);
 
   const nbUsers = seriesResponse
     .map(({ values }) => (values.length === 0 ? 0.0 : values[values.length - 1]))
@@ -53,9 +59,11 @@ const recursivelyGetChildren = (children: RequestsSummaryChild[]): ChildMetric[]
         }
   );
 
-const logMetricsSummary = (logger: Logger, summary: MetricsSummary) => {
+const logMetricsSummary = (logger: Logger, summary: MetricsSummary, elapsedTime: number, nextSummaryDelay: number) => {
   logger.group(
-    `Time: ${summary.date}, ${summary.duration} elapsed`,
+    `Time: ${summary.date}, ${formatDuration(elapsedTime)} elapsed, next refresh in ${formatDuration(
+      nextSummaryDelay
+    )}`,
     (summary.nbUsers > 0 ? `Number of concurrent users: ${summary.nbUsers}\n` : "") +
       `Number of requests: ${summary.nbRequest}\n` +
       `Number of requests per seconds: ${summary.requestsSeconds}\n` +
