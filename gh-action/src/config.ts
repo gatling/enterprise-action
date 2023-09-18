@@ -10,11 +10,10 @@ export const readConfig = (logger: Logger): config.Config => {
     api: getApiConfig(gatlingEnterpriseUrl),
     run: getRunConfig(),
     failActionOnRunFailure: getFailActionOnRunFailureConfig(),
-    waitForRunEnd: getWaitForRunEnd()
+    waitForRunEnd: getWaitForRunEnd(),
+    runSummaryLoggingConfiguration: getRunSummaryLoggingConfiguration()
   };
-  logger.debug(
-    "Parsed configuration: " + JSON.stringify({ api: { ...config.api, apiToken: "*****" }, run: config.run })
-  );
+  logger.debug("Parsed configuration: " + JSON.stringify({ ...config, api: { ...config.api, apiToken: "*****" } }));
   return config;
 };
 
@@ -30,6 +29,26 @@ const getFailActionOnRunFailureConfig = (): boolean =>
 
 const getWaitForRunEnd = (): boolean =>
   getValidatedInput("wait_for_run_end", config.requiredBooleanValidation, "wait_for_run_end is required");
+
+const getRunSummaryLoggingConfiguration = (): config.RunSummaryLoggingConfiguration => {
+  const enabled = getValidatedInput(
+    "run_summary_enabled",
+    config.requiredBooleanValidation,
+    "run_summary_enabled is required"
+  );
+  const getIntervalInput = (name: string, validator: Validator<number>) =>
+    getValidatedInput(name, validator, `${name} must be a positive number`);
+  const initialRefreshInterval = getIntervalInput(
+    "run_summary_initial_refresh_interval",
+    config.runSummaryRefreshIntervalValidation
+  );
+  const initialRefreshCount = getIntervalInput(
+    "run_summary_initial_refresh_count",
+    config.runSummaryInitialRefreshCountValidation
+  );
+  const refreshInterval = getIntervalInput("run_summary_refresh_interval", config.runSummaryRefreshIntervalValidation);
+  return { enabled, initialRefreshInterval, initialRefreshCount, refreshInterval };
+};
 
 const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
   const apiToken = getValidatedInput(

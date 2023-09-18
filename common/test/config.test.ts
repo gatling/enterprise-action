@@ -3,7 +3,8 @@ import {
   configKeysInputValidation,
   overrideLoadGeneratorsInputValidation,
   requiredBooleanValidation,
-  uuidValidation
+  uuidValidation,
+  parseStrictlyPositiveNumberValidation
 } from "@src/config";
 
 test("requiredBooleanValidation", () => {
@@ -81,4 +82,26 @@ test("hostsByPoolInputValidation", () => {
     false
   );
   expect(overrideLoadGeneratorsInputValidation.validate('"bcf62ac8-90a0-4be7-acd0-d7e87e3cbd66"').ok).toBe(false);
+});
+
+test("parseNumberValidation", () => {
+  const exactRes = parseStrictlyPositiveNumberValidation(5).validate("5");
+  expect(exactRes.ok && exactRes.value).toStrictEqual(5);
+
+  const floatRoundUpRes1 = parseStrictlyPositiveNumberValidation(5).validate("3.9");
+  expect(floatRoundUpRes1.ok && floatRoundUpRes1.value).toStrictEqual(5);
+
+  const floatRoundUpRes2 = parseStrictlyPositiveNumberValidation(1).validate("3.9");
+  expect(floatRoundUpRes2.ok && floatRoundUpRes2.value).toStrictEqual(4);
+
+  const integerRoundUpRes = parseStrictlyPositiveNumberValidation(5).validate("42");
+  expect(integerRoundUpRes.ok && integerRoundUpRes.value).toStrictEqual(45);
+
+  const expRes = parseStrictlyPositiveNumberValidation(5).validate("1.23e5");
+  expect(expRes.ok && expRes.value).toStrictEqual(123000);
+
+  expect(parseStrictlyPositiveNumberValidation(5).validate("").ok).toBe(false);
+  expect(parseStrictlyPositiveNumberValidation(5).validate("foo").ok).toBe(false);
+  expect(parseStrictlyPositiveNumberValidation(5).validate("0").ok).toBe(false);
+  expect(parseStrictlyPositiveNumberValidation(5).validate("-5.1").ok).toBe(false);
 });

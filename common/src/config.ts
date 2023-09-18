@@ -7,6 +7,7 @@ export interface Config {
   run: RunConfig;
   failActionOnRunFailure: boolean;
   waitForRunEnd: boolean;
+  runSummaryLoggingConfiguration: RunSummaryLoggingConfiguration;
 }
 
 export interface RunConfig {
@@ -19,6 +20,13 @@ export interface RunConfig {
 export interface LoadGeneratorConfiguration {
   size: number;
   weight?: number;
+}
+
+export interface RunSummaryLoggingConfiguration {
+  enabled: boolean;
+  initialRefreshInterval: number;
+  initialRefreshCount: number;
+  refreshInterval: number;
 }
 
 export const requiredInputValidation = string.filter((str) => str !== "");
@@ -56,3 +64,22 @@ const overrideLoadGeneratorsValidation = jsonValidation.then(
 export const overrideLoadGeneratorsInputValidation = optionalInputValidation.then(
   overrideLoadGeneratorsValidation.optional()
 );
+
+export const parseStrictlyPositiveNumberValidation = (roundingUpMultiple: number) =>
+  requiredInputValidation.and((str) => {
+    const parsedValue = parseFloat(str);
+    if (isNaN(parsedValue)) {
+      return Err(`Invalid integer value: ${str}`);
+    } else if (parsedValue <= 0) {
+      return Err(`Should be strictly positive`);
+    } else {
+      return Ok(
+        roundingUpMultiple !== undefined
+          ? Math.ceil(parsedValue / roundingUpMultiple) * roundingUpMultiple
+          : parsedValue
+      );
+    }
+  });
+
+export const runSummaryInitialRefreshCountValidation = parseStrictlyPositiveNumberValidation(1);
+export const runSummaryRefreshIntervalValidation = parseStrictlyPositiveNumberValidation(5);

@@ -29,7 +29,7 @@ export const runMain = async (output: Output, logger: Logger, config: Config, st
     await output.set("runs_url", startedRun.runsUrl);
 
     if (config.waitForRunEnd) {
-      const finishedRun = await waitForRunEnd(client, logger, startedRun);
+      const finishedRun = await waitForRunEnd(client, config, logger, startedRun);
       state.setFinished(); // Run finished, no cleanup needed
       logAssertionResults(logger, finishedRun.assertions);
       logResult(logger, config, startedRun, finishedRun);

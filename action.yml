@@ -31,6 +31,22 @@ inputs:
     description: 'Whether the action should wait for the end of the Gatling Enterprise simulation run before terminating. True by default. If set to false, some of this action''s outputs may be missing.'
     required: false
     default: 'true'
+  run_summary_enabled:
+    description: 'Assuming wait_for_run_end is also true, will regularly log a summary of the ongoing run to the console until it finishes. True by default.'
+    required: false
+    default: 'true'
+  run_summary_initial_refresh_interval:
+    description: 'Initial interval before displaying a new summary of the ongoing run in the console, in seconds. 5 seconds by default. Should be a multiple of 5 (otherwise it will be rounded up). Only used a limited number of times (set by run_summary_initial_refresh_count) before switching to the interval set by run_summary_permanent_refresh_interval.'
+    required: false
+    default: '5'
+  run_summary_initial_refresh_count:
+    description: 'Number of times to use run_summary_initial_refresh_interval as the interval before displaying a new summary of the ongoing run in the console. 12 times by default (i.e. 60 seconds with the default run_summary_initial_refresh_interval of 5 seconds). After that, run_summary_permanent_refresh_interval will be used. This allows to avoid spamming the log output once the test run is well underway.'
+    required: false
+    default: '12'
+  run_summary_refresh_interval:
+    description: 'Interval before displaying a new summary of the ongoing run in the console, in seconds. 60 seconds by default. Should be a multiple of 5 (otherwise it will be rounded up).'
+    required: false
+    default: '60'
 outputs:
   run_id:
     description: 'ID of the run started by this action.'
