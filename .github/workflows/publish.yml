@@ -23,7 +23,10 @@ jobs:
 
       - name: Build
         run: |
-          yarn ci
+          corepack enable
+          yarn config set nodeLinker node-modules
+          yarn plugin import workspace-tools
+          yarn install --immutable
           yarn format-check
           yarn test
           yarn package

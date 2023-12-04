@@ -33,11 +33,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 16
-          cache: 'yarn'
+          # cache is broken until we can enable Corepack directly in setup-node
+          # instead of having to wait to enable it manually later.
+          # See https://github.com/actions/setup-node/issues/531.
+          # cache: 'yarn'
 
       - name: Build
         run: |
-          yarn ci
+          corepack enable
+          yarn config set nodeLinker node-modules
+          yarn plugin import workspace-tools
+          yarn install --immutable
           yarn package
 
       - name: Gatling Enterprise Action
@@ -65,4 +71,3 @@ jobs:
           echo "Deprecated outputs:"
           echo "runs_status_code=${{ steps.enterprise-action.outputs.runs_status_code }}"
           echo "runs_status_name=${{ steps.enterprise-action.outputs.runs_status_name }}"
-          
