@@ -21,13 +21,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 16
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn ci
+          # cache is broken until we can enable Corepack directly in setup-node
+          # instead of having to wait to enable it manually later.
+          # See https://github.com/actions/setup-node/issues/531.
+          # cache: 'yarn'
 
       - name: Execute build
         run: |
+          corepack enable
+          yarn config set nodeLinker node-modules
+          yarn plugin import workspace-tools
+          yarn install --immutable
           yarn format-check
           yarn test
           yarn package
