@@ -7,10 +7,10 @@
     "docker"
   ],
   "main": "gh-action/dist/index.js",
-  "packageManager": "yarn@3.3.0",
+  "packageManager": "yarn@3.7.0",
   "scripts": {
     "clean": "rimraf */dist */tsconfig.tsbuildinfo",
-    "setup-yarn": "yarn set version 3.3.0 && yarn config set nodeLinker node-modules && yarn plugin import workspace-tools",
+    "setup-yarn": "yarn set version 3.7.0 && yarn config set nodeLinker node-modules && yarn plugin import workspace-tools",
     "ci": "yarn run setup-yarn && yarn install --immutable",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
