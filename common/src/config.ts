@@ -36,8 +36,8 @@ export const requiredBooleanValidation = requiredInputValidation.and((str) => {
   return lowerCaseStr === "true"
     ? Ok(true)
     : lowerCaseStr === "false"
-    ? Ok(false)
-    : Err(`Invalid boolean value: ${str}`);
+      ? Ok(false)
+      : Err(`Invalid boolean value: ${str}`);
 });
 export const uuidValidation = string.filter((str) =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str)
