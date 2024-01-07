@@ -9,6 +9,6 @@
   "dependencies": {
     "@actions/http-client": "2.2.0",
     "date-fns": "2.30.0",
-    "idonttrustlikethat": "2.1.0"
+    "idonttrustlikethat": "2.1.2"
   }
 }
