@@ -477,7 +477,7 @@ __metadata:
   dependencies:
     "@actions/http-client": 2.2.0
     date-fns: 2.30.0
-    idonttrustlikethat: 2.1.0
+    idonttrustlikethat: 2.1.2
   languageName: unknown
   linkType: soft
 
@@ -2116,10 +2116,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"idonttrustlikethat@npm:2.1.0":
-  version: 2.1.0
-  resolution: "idonttrustlikethat@npm:2.1.0"
-  checksum: 5dbdb34f269a4111f26f9b2a141805c5d80a9d42e4cfb7baae280ee62ac83b9ad1e8c7f9f75692afe625cd98d28740998d2153f1ee9553d8a07d2d2eba7ccd67
+"idonttrustlikethat@npm:2.1.2":
+  version: 2.1.2
+  resolution: "idonttrustlikethat@npm:2.1.2"
+  checksum: a5a94d6c7302db0e7ee2a8399f34a185c7161b7e5884ff1b99a61c350c075c7fffd2faae861641386c69ee73aef8d1f636c6e7f5219ee4fd00b8ad72dc4559d6
   languageName: node
   linkType: hard
 
