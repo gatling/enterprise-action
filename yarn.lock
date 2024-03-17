@@ -392,15 +392,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.21.0":
-  version: 7.21.5
-  resolution: "@babel/runtime@npm:7.21.5"
-  dependencies:
-    regenerator-runtime: ^0.13.11
-  checksum: 358f2779d3187f5c67ad302e8f8d435412925d0b991d133c7d4a7b1ddd5a3fda1b6f34537cb64628dfd96a27ae46df105bed3895b8d754b88cacdded8d1129dd
-  languageName: node
-  linkType: hard
-
 "@babel/template@npm:^7.20.7, @babel/template@npm:^7.3.3":
   version: 7.20.7
   resolution: "@babel/template@npm:7.20.7"
@@ -476,7 +467,7 @@ __metadata:
   resolution: "@gatling-enterprise-runner/common@workspace:common"
   dependencies:
     "@actions/http-client": 2.2.0
-    date-fns: 2.30.0
+    date-fns: 3.5.0
     idonttrustlikethat: 2.1.2
   languageName: unknown
   linkType: soft
@@ -1629,12 +1620,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:2.30.0":
-  version: 2.30.0
-  resolution: "date-fns@npm:2.30.0"
-  dependencies:
-    "@babel/runtime": ^7.21.0
-  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
+"date-fns@npm:3.5.0":
+  version: 3.5.0
+  resolution: "date-fns@npm:3.5.0"
+  checksum: 0f326b72aff0a10b5a7a253d7790462263ee3c79b4283fdbb423c3159017f7ddb7cfd8e509ce94c652825232e9aa84278143f333ddb357bc6b03bd39eebd6f5d
   languageName: node
   linkType: hard
 
@@ -3422,13 +3411,6 @@ __metadata:
     string_decoder: ^1.1.1
     util-deprecate: ^1.0.1
   checksum: bdcbe6c22e846b6af075e32cf8f4751c2576238c5043169a1c221c92ee2878458a816a4ea33f4c67623c0b6827c8a400409bfb3cf0bf3381392d0b1dfb52ac8d
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.13.11":
-  version: 0.13.11
-  resolution: "regenerator-runtime@npm:0.13.11"
-  checksum: 27481628d22a1c4e3ff551096a683b424242a216fee44685467307f14d58020af1e19660bf2e26064de946bad7eff28950eae9f8209d55723e2d9351e632bbb4
   languageName: node
   linkType: hard
 
