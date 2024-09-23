@@ -8,6 +8,9 @@ inputs:
     description: 'URL of your Gatling Enterprise server (needed only for self-hosted instances).'
     required: false
     default: 'https://cloud.gatling.io'
+  gatling_enterprise_api_url:
+    description: 'Allows configuring a separate URL for the Gatling Enterprise API, this is NOT required for typical use cases.'
+    required: false
   api_token:
     description: 'A Gatling Enterprise API token with at least Start permission (we recommend storing it securely using GitHub''s encrypted secrets; see https://docs.github.com/en/actions/security-guides/encrypted-secrets#using-encrypted-secrets-in-a-workflow). Alternatively, you can define your token in an environment variable named GATLING_ENTERPRISE_API_TOKEN.'
     required: false

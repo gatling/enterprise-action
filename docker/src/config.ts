@@ -8,9 +8,10 @@ export interface DockerConfig extends config.Config {
 
 export const readConfig = (logger: Logger): DockerConfig => {
   const gatlingEnterpriseUrl = getGatlingEnterpriseUrlConfig();
+  const apiUrl = getApiUrlConfig(gatlingEnterpriseUrl);
   const config = {
     gatlingEnterpriseUrl,
-    api: getApiConfig(gatlingEnterpriseUrl),
+    api: getApiConfig(apiUrl),
     run: getRunConfig(),
     failActionOnRunFailure: getFailActionOnRunFailureConfig(),
     waitForRunEnd: getWaitForRunEnd(),
@@ -28,6 +29,15 @@ const getGatlingEnterpriseUrlConfig = (): string =>
     "GATLING_ENTERPRISE_URL is required",
     "https://cloud.gatling.io"
   );
+
+const getApiUrlConfig = (gatlingEnterpriseUrl: string): string => {
+  const configuredValue = getValidatedInput("GATLING_ENTERPRISE_API_URL", config.optionalInputValidation, "");
+  return configuredValue !== undefined
+    ? configuredValue
+    : gatlingEnterpriseUrl === "https://cloud.gatling.io"
+      ? "https://api.gatling.io"
+      : gatlingEnterpriseUrl;
+};
 
 const getOutputDotEnvPath = (): string | undefined =>
   getValidatedInput("OUTPUT_DOT_ENV_FILE_PATH", config.optionalInputValidation, "");
@@ -70,14 +80,14 @@ const getRunSummaryLoggingConfiguration = (): config.RunSummaryLoggingConfigurat
   return { enabled, initialRefreshInterval, initialRefreshCount, refreshInterval };
 };
 
-const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
+const getApiConfig = (apiUrl: string): ApiClientConfig => {
   const apiToken = getValidatedInput(
     "GATLING_ENTERPRISE_API_TOKEN",
     config.requiredInputValidation,
     "GATLING_ENTERPRISE_API_TOKEN is required"
   );
   return {
-    baseUrl: `${gatlingEnterpriseUrl}/api/public`,
+    baseUrl: `${apiUrl}/api/public`,
     apiToken
   };
 };

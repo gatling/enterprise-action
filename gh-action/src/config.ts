@@ -5,9 +5,10 @@ import { ApiClientConfig, config, Logger } from "@gatling-enterprise-runner/comm
 
 export const readConfig = (logger: Logger): config.Config => {
   const gatlingEnterpriseUrl = getGatlingEnterpriseUrlConfig();
+  const apiUrl = getApiUrlConfig(gatlingEnterpriseUrl);
   const config = {
     gatlingEnterpriseUrl,
-    api: getApiConfig(gatlingEnterpriseUrl),
+    api: getApiConfig(apiUrl),
     run: getRunConfig(),
     failActionOnRunFailure: getFailActionOnRunFailureConfig(),
     waitForRunEnd: getWaitForRunEnd(),
@@ -19,6 +20,15 @@ export const readConfig = (logger: Logger): config.Config => {
 
 const getGatlingEnterpriseUrlConfig = (): string =>
   getValidatedInput("gatling_enterprise_url", config.requiredInputValidation, "gatling_enterprise_url is required");
+
+const getApiUrlConfig = (gatlingEnterpriseUrl: string): string => {
+  const configuredValue = getValidatedInput("gatling_enterprise_api_url", config.optionalInputValidation, "");
+  return configuredValue !== undefined
+    ? configuredValue
+    : gatlingEnterpriseUrl === "https://cloud.gatling.io"
+      ? "https://api.gatling.io"
+      : gatlingEnterpriseUrl;
+};
 
 const getFailActionOnRunFailureConfig = (): boolean =>
   getValidatedInput(
@@ -50,7 +60,7 @@ const getRunSummaryLoggingConfiguration = (): config.RunSummaryLoggingConfigurat
   return { enabled, initialRefreshInterval, initialRefreshCount, refreshInterval };
 };
 
-const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
+const getApiConfig = (apiUrl: string): ApiClientConfig => {
   const apiToken = getValidatedInput(
     "api_token",
     config.requiredInputValidation,
@@ -58,7 +68,7 @@ const getApiConfig = (gatlingEnterpriseUrl: string): ApiClientConfig => {
     "GATLING_ENTERPRISE_API_TOKEN"
   );
   return {
-    baseUrl: `${gatlingEnterpriseUrl}/api/public`,
+    baseUrl: `${apiUrl}/api/public`,
     apiToken
   };
 };
