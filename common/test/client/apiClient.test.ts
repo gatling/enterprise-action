@@ -5,7 +5,7 @@ import { StartSimulationResponse } from "@src/client/responses/startSimulationRe
 import { HttpClientError } from "@actions/http-client";
 
 const config: ApiClientConfig = {
-  baseUrl: "https://cloud.gatling.io/api/public",
+  baseUrl: "https://api.gatling.io/api/public",
   apiToken: "my-token"
 };
 const client = apiClient(config);
