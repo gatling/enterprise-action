@@ -124,7 +124,9 @@ const getValidatedInput = <T>(
   defaultValue?: string
 ) => {
   const effectiveDefault = defaultValue ?? "";
-  const rawInput = process.env[envVarName] ?? effectiveDefault;
+
+  // The PLUGIN_ prefix is used to pass env values to Harness
+  const rawInput = process.env[envVarName] ?? process.env[`PLUGIN_${envVarName}`] ?? effectiveDefault;
   const result = validator.validate(rawInput);
   if (!result.ok) {
     // TODO RND-10 use validation error result to give better error messages
