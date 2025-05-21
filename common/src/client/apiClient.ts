@@ -5,7 +5,6 @@ import { OutgoingHttpHeaders } from "http";
 import { StartSimulationRequest } from "./requests/startSimulationRequest";
 import { StartSimulationResponse } from "./responses/startSimulationResponse";
 import { RunInformationResponse } from "./responses/runInformationResponse";
-import { SimulationResponse } from "./responses/simulationResponse";
 import { SeriesResponse } from "./responses/seriesResponse";
 import { RequestsSummaryResponse } from "./responses/requestsSummaryResponse";
 
@@ -17,7 +16,6 @@ export interface ApiClientConfig {
 export interface ApiClient {
   startSimulation: (simulationId: string, options?: StartSimulationRequest) => Promise<StartSimulationResponse>;
   getRunInformation: (runId: string) => Promise<RunInformationResponse>;
-  getSimulations: () => Promise<SimulationResponse[]>;
   abortRun: (runId: string) => Promise<boolean>;
   getConcurrentUserMetric: (runId: string, scenario: string) => Promise<SeriesResponse[]>;
   getRequestsSummary: (runId: string) => Promise<RequestsSummaryResponse>;
@@ -30,7 +28,6 @@ export const apiClient = (conf: ApiClientConfig): ApiClient => {
     startSimulation: (simulationId, options) =>
       postJson(client, conf, "/simulations/start", options ?? {}, { simulation: simulationId }),
     getRunInformation: (runId) => getJson(client, conf, "/run", { run: runId }),
-    getSimulations: () => getJson(client, conf, "/simulations"),
     abortRun: (runId) => abortRun(client, conf, runId),
     getConcurrentUserMetric: (runId, scenario) => getJson(client, conf, "/series", seriesParams(runId, scenario)),
     getRequestsSummary: (runId) => getJson(client, conf, "/summaries/requests", { run: runId }),
