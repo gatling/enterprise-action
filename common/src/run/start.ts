@@ -11,7 +11,9 @@ export const startRun = async (client: ApiClient, config: Config): Promise<Start
   const response = await client.startSimulation(config.run.simulationId, {
     extraSystemProperties: config.run.extraSystemProperties,
     extraEnvironmentVariables: config.run.extraEnvironmentVariables,
-    overrideHostsByPool: config.run.overrideLoadGenerators
+    overrideHostsByPool: config.run.overrideLoadGenerators,
+    title: config.run.title,
+    description: config.run.description
   });
 
   // Fallback URLs for Gatling Enterprise Self-Hosted

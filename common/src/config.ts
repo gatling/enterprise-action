@@ -15,6 +15,8 @@ export interface RunConfig {
   extraSystemProperties?: Record<string, string>;
   extraEnvironmentVariables?: Record<string, string>;
   overrideLoadGenerators?: Record<string, LoadGeneratorConfiguration>;
+  title?: string;
+  description?: string;
 }
 
 export interface LoadGeneratorConfiguration {
