@@ -90,11 +90,23 @@ const getRunConfig = (): config.RunConfig => {
     config.overrideLoadGeneratorsInputValidation,
     "override_load_generators must be a valid configuration for overriding load generators"
   );
+  const title = getValidatedInput(
+    "title",
+    config.optionalInputValidation,
+    "title must be a string (or omitted entirely)"
+  );
+  const description = getValidatedInput(
+    "description",
+    config.optionalInputValidation,
+    "description must be a string (or omitted entirely)"
+  );
   return {
     simulationId,
     extraSystemProperties,
     extraEnvironmentVariables,
-    overrideLoadGenerators: overrideLoadGenerators
+    overrideLoadGenerators,
+    title,
+    description
   };
 };
 

@@ -26,6 +26,12 @@ inputs:
   override_load_generators:
     description: 'Overrides the simulation''s load generators configuration. Must be formatted as a JSON object, e.g. {"4a399023-d443-3a58-864f-3919760df78b":{"size":1,"weight":60},"c800b6d9-163b-3db7-928f-86c1470a9542":{"size":1,"weight":40}} (weights are optional).'
     required: false
+  title:
+    description: 'Give a title to the run started by this action.'
+    required: false
+  description:
+    description: 'Give a description to the run started by this action.'
+    required: false
   fail_action_on_run_failure:
     description: 'Whether the action should fail if the run ends with a failed status. True by default. If set to false, some of this action''s outputs may be missing.'
     required: false
