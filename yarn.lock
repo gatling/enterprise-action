@@ -3704,14 +3704,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:14.0.6":
-  version: 14.0.6
-  resolution: "nock@npm:14.0.6"
+"nock@npm:14.0.7":
+  version: 14.0.7
+  resolution: "nock@npm:14.0.7"
   dependencies:
     "@mswjs/interceptors": ^0.39.3
     json-stringify-safe: ^5.0.1
     propagate: ^2.0.0
-  checksum: 6f2e537a1e5897e8de4105cff5e78d0d3a26fd4e916dbfea7e03c62858de46ead61bfb10c3a311e01e6ce0ae95681d3f198ab2ece6229d1f0f86e8d3582e6992
+  checksum: fb29d1e5d97a1d599b72be1eba1ddc448f37dca7402f0275a8aee01960c5362406170d2c87a871bd9726352a707e820a3899ff1282fae05e5168bad85186734c
   languageName: node
   linkType: hard
 
@@ -4097,7 +4097,7 @@ __metadata:
     "@vercel/ncc": 0.38.3
     jest: 30.0.4
     js-yaml: 4.1.0
-    nock: 14.0.6
+    nock: 14.0.7
     prettier: 3.6.2
     rimraf: 6.0.1
     ts-jest: 29.4.0
