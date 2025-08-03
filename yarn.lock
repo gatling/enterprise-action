@@ -1145,9 +1145,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.39.3":
-  version: 0.39.3
-  resolution: "@mswjs/interceptors@npm:0.39.3"
+"@mswjs/interceptors@npm:^0.39.5":
+  version: 0.39.5
+  resolution: "@mswjs/interceptors@npm:0.39.5"
   dependencies:
     "@open-draft/deferred-promise": ^2.2.0
     "@open-draft/logger": ^0.3.0
@@ -1155,7 +1155,7 @@ __metadata:
     is-node-process: ^1.2.0
     outvariant: ^1.4.3
     strict-event-emitter: ^0.5.1
-  checksum: 85665ae2efc7ca887f7c3c7bed15422fcc2dded85117358399500771b75642970adfd9e7e2d2ee27d19d116356c3889a71ad7387f955bdfbcbb922f57e5a163b
+  checksum: ba555a9023a6e156feb195b4d47194aa8ae77b2e73affc7b378f97e9b9c77a8a29396c184e066b9d554fafbc0a092d6e70811916dfe8448f15c32857c9565241
   languageName: node
   linkType: hard
 
@@ -3704,14 +3704,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:14.0.7":
-  version: 14.0.7
-  resolution: "nock@npm:14.0.7"
+"nock@npm:14.0.8":
+  version: 14.0.8
+  resolution: "nock@npm:14.0.8"
   dependencies:
-    "@mswjs/interceptors": ^0.39.3
+    "@mswjs/interceptors": ^0.39.5
     json-stringify-safe: ^5.0.1
     propagate: ^2.0.0
-  checksum: fb29d1e5d97a1d599b72be1eba1ddc448f37dca7402f0275a8aee01960c5362406170d2c87a871bd9726352a707e820a3899ff1282fae05e5168bad85186734c
+  checksum: a537766b53b884ad7809a4ee731c3f6618aa395e62adcd9b3be0a9b7b514e7fed8867a8d7330057a8011a902df4adbf6294d67bd0c88fbf0af39c47ec41cc18f
   languageName: node
   linkType: hard
 
@@ -4097,7 +4097,7 @@ __metadata:
     "@vercel/ncc": 0.38.3
     jest: 30.0.5
     js-yaml: 4.1.0
-    nock: 14.0.7
+    nock: 14.0.8
     prettier: 3.6.2
     rimraf: 6.0.1
     ts-jest: 29.4.0
