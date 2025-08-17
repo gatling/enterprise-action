@@ -21,7 +21,7 @@
     "docker-runner-start": "yarn build-common && yarn workspace '@gatling-enterprise-runner/docker' run start"
   },
   "devDependencies": {
-    "@types/node": "20.19.10",
+    "@types/node": "20.19.11",
     "@vercel/ncc": "0.38.3",
     "jest": "30.0.5",
     "js-yaml": "4.1.0",
