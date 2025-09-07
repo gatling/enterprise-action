@@ -36,13 +36,16 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20
-          # cache is broken until we can enable Corepack directly in setup-node
+          # Cache is broken until we can enable Corepack directly in setup-node
           # instead of having to wait to enable it manually later.
           # See https://github.com/actions/setup-node/issues/531.
           # cache: 'yarn'
+          # Automatic cache detection is broken for the same reason, must be
+          # disabled explicitly.
+          package-manager-cache: false
 
       - name: Build
         run: |
