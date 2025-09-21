@@ -7,14 +7,20 @@ import { StartSimulationResponse } from "./responses/startSimulationResponse";
 import { RunInformationResponse } from "./responses/runInformationResponse";
 import { SeriesResponse } from "./responses/seriesResponse";
 import { RequestsSummaryResponse } from "./responses/requestsSummaryResponse";
+import { RunId } from "@src/client/models/runId";
+import { ViewLiveResponse } from "@src/client/responses/liveInformationResponse";
+import { PluginFlavor } from "@src/client/models/pluginFlavor";
 
 export interface ApiClientConfig {
   baseUrl: string;
   apiToken: string;
+  pluginFlavor: PluginFlavor;
+  pluginVersion: string;
 }
 
 export interface ApiClient {
   startSimulation: (simulationId: string, options?: StartSimulationRequest) => Promise<StartSimulationResponse>;
+  getLiveInformation: (runId: RunId) => Promise<ViewLiveResponse>;
   getRunInformation: (runId: string) => Promise<RunInformationResponse>;
   abortRun: (runId: string) => Promise<boolean>;
   getConcurrentUserMetric: (runId: string, scenario: string) => Promise<SeriesResponse[]>;
@@ -26,11 +32,14 @@ export const apiClient = (conf: ApiClientConfig): ApiClient => {
   const client = new HttpClient();
   return {
     startSimulation: (simulationId, options) =>
-      postJson(client, conf, "/simulations/start", options ?? {}, { simulation: simulationId }),
-    getRunInformation: (runId) => getJson(client, conf, "/run", { run: runId }),
+      postJson(client, conf, "/api/public/simulations/start", options ?? {}, { simulation: simulationId }),
+    getLiveInformation: (runId) =>
+      getJson(client, conf, `/api/private/plugins/runs/${runId}/views/live`, {}, pluginHeaders(conf)),
+    getRunInformation: (runId) => getJson(client, conf, "/api/public/run", { run: runId }),
     abortRun: (runId) => abortRun(client, conf, runId),
-    getConcurrentUserMetric: (runId, scenario) => getJson(client, conf, "/series", seriesParams(runId, scenario)),
-    getRequestsSummary: (runId) => getJson(client, conf, "/summaries/requests", { run: runId }),
+    getConcurrentUserMetric: (runId, scenario) =>
+      getJson(client, conf, "/api/public/series", seriesParams(runId, scenario)),
+    getRequestsSummary: (runId) => getJson(client, conf, "/api/public/summaries/requests", { run: runId }),
     checkCloudCompatibility: () => checkCloudCompatibility(client, conf)
   };
 };
@@ -47,7 +56,7 @@ const seriesParams = (runId: string, scenario: string) => ({
 
 const abortRun = async (client: HttpClient, conf: ApiClientConfig, runId: string): Promise<boolean> => {
   try {
-    await postJson(client, conf, "/simulations/abort", {}, { run: runId });
+    await postJson(client, conf, "/api/public/simulations/abort", {}, { run: runId });
     return true;
   } catch (error) {
     if (
@@ -64,7 +73,10 @@ const abortRun = async (client: HttpClient, conf: ApiClientConfig, runId: string
 const checkCloudCompatibility = async (client: HttpClient, conf: ApiClientConfig): Promise<void> => {
   const clientName = "gatling-enterprise-github-action";
   const version = "0.0.1";
-  const response = await client.get(buildUrl(conf, "/compatibility", { clientName, version }), baseHeaders);
+  const response = await client.get(
+    buildUrl(conf, "/api/public/compatibility", { clientName, version }),
+    baseHeaders
+  );
   if (response.message.statusCode === HttpCodes.BadRequest) {
     throw new Error(
       `Plugin ${clientName} version ${version} is no longer supported; please upgrade to the latest version`
@@ -76,8 +88,13 @@ const getJson = <T>(
   client: HttpClient,
   conf: ApiClientConfig,
   path: string,
-  params?: Record<string, string>
-): Promise<T> => client.getJson<T>(buildUrl(conf, path, params), headers(conf)).then(handleJsonResponse);
+  params?: Record<string, string>,
+  additionalHeaders?: OutgoingHttpHeaders
+): Promise<T> =>
+  client.getJson<T>(
+    buildUrl(conf, path, params),
+    { ...headers(conf), ...additionalHeaders }
+  ).then(handleJsonResponse);
 
 const postJson = <T>(
   client: HttpClient,
@@ -85,14 +102,26 @@ const postJson = <T>(
   path: string,
   payload: any,
   params?: Record<string, string>
-): Promise<T> => client.postJson<T>(buildUrl(conf, path, params), payload, headers(conf)).then(handleJsonResponse);
+): Promise<T> =>
+  client.postJson<T>(
+    buildUrl(conf, path, params),
+    payload,
+    headers(conf)
+  ).then(handleJsonResponse);
 
 const headers = (conf: ApiClientConfig): OutgoingHttpHeaders => ({
   ...baseHeaders,
   Authorization: conf.apiToken
 });
 
-const baseHeaders: OutgoingHttpHeaders = { "User-Agent": "GatlingEnterpriseGitHubAction/v1" };
+const baseHeaders: OutgoingHttpHeaders = {
+  "User-Agent": "GatlingEnterpriseGitHubAction/v1"
+};
+
+const pluginHeaders = (conf: ApiClientConfig): OutgoingHttpHeaders => ({
+  "X-Gatling-Plugin-Flavor": conf.pluginFlavor,
+  "X-Gatling-Plugin-Version": conf.pluginVersion
+});
 
 const buildUrl = (conf: ApiClientConfig, path: string, queryParams?: Record<string, string>): string => {
   const resourceUrl = conf.baseUrl + path;

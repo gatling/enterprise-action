@@ -4,6 +4,7 @@ export { Output, OutputKey } from "./output";
 export { StateStore } from "./state";
 export { Logger } from "./log";
 export { ApiClientConfig } from "./client/apiClient";
+export { PluginFlavor } from "./client/models/pluginFlavor"
 
 export * as config from "./config";
 export * as logging from "./log";

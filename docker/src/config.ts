@@ -1,6 +1,6 @@
 import { Validator } from "idonttrustlikethat";
 
-import { config, Logger, ApiClientConfig } from "@gatling-enterprise-runner/common";
+import { config, Logger, ApiClientConfig, PluginFlavor } from "@gatling-enterprise-runner/common";
 
 export interface DockerConfig extends config.Config {
   outputDotEnvPath: string | undefined;
@@ -87,8 +87,10 @@ const getApiConfig = (apiUrl: string): ApiClientConfig => {
     "GATLING_ENTERPRISE_API_TOKEN is required"
   );
   return {
-    baseUrl: `${apiUrl}/api/public`,
-    apiToken
+    baseUrl: apiUrl,
+    apiToken: apiToken,
+    pluginFlavor: PluginFlavor.ENTERPRISE_RUNNER,
+    pluginVersion: require('package.json').version
   };
 };
 
