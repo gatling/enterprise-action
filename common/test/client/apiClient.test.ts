@@ -1,12 +1,15 @@
-import { apiClient, ApiClientConfig } from "@src/client/apiClient";
+import { apiClient, ApiClientConfig } from "../../src/client/apiClient";
 import nock from "nock";
 import { expect, test } from "@jest/globals";
-import { StartSimulationResponse } from "@src/client/responses/startSimulationResponse";
+import { StartSimulationResponse } from "../../src/client/responses/startSimulationResponse";
 import { HttpClientError } from "@actions/http-client";
+import { PluginFlavor } from "../../src";
 
 const config: ApiClientConfig = {
   baseUrl: "https://api.gatling.io/api/public",
-  apiToken: "my-token"
+  apiToken: "my-token",
+  pluginFlavor: PluginFlavor.GITHUB_ACTION,
+  pluginVersion: "42.0.2"
 };
 const client = apiClient(config);
 

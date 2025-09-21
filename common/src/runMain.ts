@@ -5,9 +5,9 @@ import { Logger } from "./log";
 import { Output } from "./output";
 import { FinishedRun, waitForRunEnd } from "./run/ongoing";
 import { StartedRun, startRun } from "./run/start";
-import { isSuccessful } from "./run/status";
 import { StateStore } from "./state";
 import { formatErrorMessage, console } from "./utils";
+import { RunStatusDisplayNames, RunStatusHelpers } from "./client/models/runStatus";
 
 const { red, green, bright } = console;
 
@@ -18,6 +18,7 @@ export const runMain = async (output: Output, logger: Logger, config: Config, st
 
     const client = apiClient(config.api);
 
+    // XXX Remove useless call
     await client.checkCloudCompatibility();
 
     const startedRun = await startRun(client, config);
@@ -34,8 +35,7 @@ export const runMain = async (output: Output, logger: Logger, config: Config, st
       logAssertionResults(logger, finishedRun.assertions);
       logResult(logger, config, startedRun, finishedRun);
 
-      await output.set("run_status_code", finishedRun.statusCode);
-      await output.set("run_status_name", finishedRun.statusName);
+      await output.set("run_status_name", RunStatusDisplayNames[finishedRun.status]);
       await output.set("run_assertions", finishedRun.assertions);
     } else {
       state.setFinished(); // Not waiting for run end, no cleanup needed
@@ -81,10 +81,10 @@ const logAssertionResults = (logger: Logger, assertions: Assertion[]): void => {
 const logResult = (logger: Logger, config: Config, startedRun: StartedRun, finishedRun: FinishedRun) => {
   logger.log("");
   logger.log(bright("Simulation result:"));
-  if (isSuccessful(finishedRun.statusCode)) {
-    logger.log(green(`Run ${finishedRun.runId} finished with status ${finishedRun.statusName}`));
+  if (RunStatusHelpers.isSuccessful(finishedRun.status)) {
+    logger.log(green(`Run ${finishedRun.runId} finished with status ${RunStatusDisplayNames[finishedRun.status]}`));
   } else {
-    const errorMessage = `Run ${finishedRun.runId} failed with status ${finishedRun.statusName}`;
+    const errorMessage = `Run ${finishedRun.runId} failed with status ${RunStatusDisplayNames[finishedRun.status]}`;
     logger.annotateError(errorMessage);
     if (config.failActionOnRunFailure) {
       process.exitCode = 1;
