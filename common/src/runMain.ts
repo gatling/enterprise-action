@@ -18,9 +18,6 @@ export const runMain = async (output: Output, logger: Logger, config: Config, st
 
     const client = apiClient(config.api);
 
-    // XXX Remove useless call
-    await client.checkCloudCompatibility();
-
     const startedRun = await startRun(client, config);
     state.setRunning(startedRun.runId); // Run started, cleanup will be needed if interrupted now
     logStart(logger, config, startedRun);

@@ -25,7 +25,6 @@ export interface ApiClient {
   abortRun: (runId: string) => Promise<boolean>;
   getConcurrentUserMetric: (runId: string, scenario: string) => Promise<SeriesResponse[]>;
   getRequestsSummary: (runId: string) => Promise<RequestsSummaryResponse>;
-  checkCloudCompatibility: () => Promise<void>;
 }
 
 export const apiClient = (conf: ApiClientConfig): ApiClient => {
@@ -40,7 +39,6 @@ export const apiClient = (conf: ApiClientConfig): ApiClient => {
     getConcurrentUserMetric: (runId, scenario) =>
       getJson(client, conf, "/api/public/series", seriesParams(runId, scenario)),
     getRequestsSummary: (runId) => getJson(client, conf, "/api/public/summaries/requests", { run: runId }),
-    checkCloudCompatibility: () => checkCloudCompatibility(client, conf)
   };
 };
 
@@ -67,17 +65,6 @@ const abortRun = async (client: HttpClient, conf: ApiClientConfig, runId: string
     } else {
       throw error;
     }
-  }
-};
-
-const checkCloudCompatibility = async (client: HttpClient, conf: ApiClientConfig): Promise<void> => {
-  const clientName = "gatling-enterprise-github-action";
-  const version = "0.0.1";
-  const response = await client.get(buildUrl(conf, "/api/public/compatibility", { clientName, version }), baseHeaders);
-  if (response.message.statusCode === HttpCodes.BadRequest) {
-    throw new Error(
-      `Plugin ${clientName} version ${version} is no longer supported; please upgrade to the latest version`
-    );
   }
 };
 
