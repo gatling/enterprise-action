@@ -2,24 +2,16 @@ import assert from "assert";
 
 /**
  * Formats duration with a format like "2h 25m 12s".
- * @param start timestamp in milliseconds
- * @param end timestamp in milliseconds
+ * @param duration duration in seconds
  */
-export const formatDurationDiff = (start: number, end: number): string => formatDuration(end - start);
-
-/**
- * Formats duration with a format like "2h 25m 12s".
- * @param duration duration in milliseconds
- */
-export const formatDuration = (duration: number): string => {
-  assert(duration >= 0, "Cannot format negative duration");
-  const totalSeconds = Math.floor(duration / 1000);
+export const formatDuration = (durationInSecond: number): string => {
+  assert(durationInSecond >= 0, "Cannot format negative duration");
 
   let formattedStr = "";
-  let remainder = totalSeconds;
+  let remainder = durationInSecond;
 
   const addFormattedValue = (lengthSeconds: number, symbol: string): void => {
-    if (totalSeconds >= lengthSeconds) {
+    if (durationInSecond >= lengthSeconds) {
       const value = Math.floor(remainder / lengthSeconds);
       remainder = remainder % lengthSeconds;
       formattedStr += value + symbol;

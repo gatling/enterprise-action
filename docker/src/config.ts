@@ -90,7 +90,7 @@ const getApiConfig = (apiUrl: string): ApiClientConfig => {
     baseUrl: apiUrl,
     apiToken: apiToken,
     pluginFlavor: PluginFlavor.ENTERPRISE_RUNNER,
-    pluginVersion: require('package.json').version
+    pluginVersion: require("package.json").version
   };
 };
 

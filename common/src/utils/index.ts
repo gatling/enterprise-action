@@ -1,4 +1,4 @@
 export { formatErrorMessage } from "./error";
-export { formatDuration, formatDurationDiff } from "./duration";
+export { formatDuration } from "./duration";
 
 export * as console from "./console";

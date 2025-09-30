@@ -23,8 +23,7 @@ const logLiveStatistics = (logger: Logger, runLiveStatistics: Statistics, nextSu
   const listMetric = recursivelyGetChildren(runLiveStatistics.children ?? []);
 
   logger.group(
-    /// XXX Remove * 1000 by modifying formatDuration
-    `Time: ${date}, ${formatDuration(runLiveStatistics.durationInSeconds * 1000)} elapsed, next refresh in ${formatDuration(
+    `Time: ${date}, ${formatDuration(runLiveStatistics.durationInSeconds)} elapsed, next refresh in ${formatDuration(
       nextSummaryDelay
     )}`,
     `Number of concurrent users: ${runLiveStatistics.maxConcurrentUsers}\n` +

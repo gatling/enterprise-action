@@ -38,7 +38,7 @@ export const apiClient = (conf: ApiClientConfig): ApiClient => {
     abortRun: (runId) => abortRun(client, conf, runId),
     getConcurrentUserMetric: (runId, scenario) =>
       getJson(client, conf, "/api/public/series", seriesParams(runId, scenario)),
-    getRequestsSummary: (runId) => getJson(client, conf, "/api/public/summaries/requests", { run: runId }),
+    getRequestsSummary: (runId) => getJson(client, conf, "/api/public/summaries/requests", { run: runId })
   };
 };
 

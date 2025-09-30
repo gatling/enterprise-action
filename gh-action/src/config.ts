@@ -72,7 +72,7 @@ const getApiConfig = (apiUrl: string): ApiClientConfig => {
     baseUrl: apiUrl,
     apiToken: apiToken,
     pluginFlavor: PluginFlavor.GITHUB_ACTION,
-    pluginVersion: require('package.json').version
+    pluginVersion: require("package.json").version
   };
 };
 
