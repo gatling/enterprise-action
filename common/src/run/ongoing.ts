@@ -89,10 +89,6 @@ const waitForRunEndLoop = async (
       consecutiveErrorsCount++;
       handleError(logger, error, consecutiveErrorsCount);
     }
-    logger.log(`viewLiveResponse.status: ${viewLiveResponse?.status}`);
-    logger.log(
-      `isRunning: ${viewLiveResponse?.status ? RunStatusHelpers.isRunning(viewLiveResponse.status) : "noStatus"}`
-    );
   } while (viewLiveResponse === undefined || RunStatusHelpers.isRunning(viewLiveResponse.status));
 
   const { assertions } = await client.getRunInformation(startedRun.runId);

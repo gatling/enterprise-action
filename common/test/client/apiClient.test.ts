@@ -6,7 +6,7 @@ import { HttpClientError } from "@actions/http-client";
 import { PluginFlavor } from "../../src";
 
 const config: ApiClientConfig = {
-  baseUrl: "https://api.gatling.io/api/public",
+  baseUrl: "https://api.gatling.io",
   apiToken: "my-token",
   pluginFlavor: PluginFlavor.GITHUB_ACTION,
   pluginVersion: "42.0.2"
@@ -14,7 +14,7 @@ const config: ApiClientConfig = {
 const client = apiClient(config);
 
 const simulation_id = "3e5d7e20-53c2-40ba-b0a2-0b0d93b33287";
-const simulation_start_expected_path = `/simulations/start?simulation=${simulation_id}`;
+const simulation_start_expected_path = `/api/public/simulations/start?simulation=${simulation_id}`;
 
 const successfulStartedSimulationResponse: StartSimulationResponse = {
   className: "computerdatabase.ComputerDatabaseSimulation",
