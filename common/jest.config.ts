@@ -1,5 +1,6 @@
 import { JestConfigWithTsJest, pathsToModuleNameMapper } from "ts-jest";
-import { compilerOptions } from "./tsconfig.json";
+
+const { compilerOptions } = require("./tsconfig.json");
 
 const jestConfig: JestConfigWithTsJest = {
   clearMocks: true,

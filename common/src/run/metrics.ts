@@ -1,115 +1,51 @@
 import { format } from "date-fns";
 
-import { ApiClient } from "../client/apiClient";
-import { RequestsSummaryChild } from "../client/responses/requestsSummaryResponse";
-import { RunInformationResponse } from "../client/responses/runInformationResponse";
 import { Logger } from "../log";
-import { formatDuration, formatDurationDiff } from "../utils";
+import { formatDuration } from "../utils";
+import { GroupNode, isGroupNode, Node, RequestNode, Statistics } from "../client/responses/liveInformationResponse";
 
-export const getAndLogMetricsSummary = async (
-  client: ApiClient,
+export const logViewLiveStatistics = (
   logger: Logger,
-  runInfo: RunInformationResponse,
-  elapsedTimeMillis: number,
+  runLiveStatistics: Statistics,
   nextSummaryDelayMillis: number
 ) => {
-  const metricsSummary = await getMetricsSummary(client, runInfo);
-  logMetricsSummary(logger, metricsSummary, elapsedTimeMillis, nextSummaryDelayMillis);
+  logLiveStatistics(logger, runLiveStatistics, nextSummaryDelayMillis);
 };
 
-const getMetricsSummary = async (client: ApiClient, runInfo: RunInformationResponse): Promise<MetricsSummary> => {
-  const [seriesResponse, requestsSummary] = await Promise.all([
-    client.getConcurrentUserMetric(runInfo.runId, runInfo.scenario),
-    client.getRequestsSummary(runInfo.runId)
-  ]);
+const recursivelyGetChildren = (children: Node[]): Node[] =>
+  children.map((child: Node) =>
+    isGroupNode(child) ? { ...child, children: recursivelyGetChildren(child.children) } : child
+  );
 
+const logLiveStatistics = (logger: Logger, runLiveStatistics: Statistics, nextSummaryDelay: number) => {
   const currentTimestamp = Date.now();
   const date = format(currentTimestamp, "yyyy-MM-dd HH:mm:ss");
-  const duration = formatDurationDiff(runInfo.injectStart, currentTimestamp);
+  const listMetric = recursivelyGetChildren(runLiveStatistics.children ?? []);
 
-  const nbUsers = seriesResponse
-    .map(({ values }) => (values.length === 0 ? 0.0 : values[values.length - 1]))
-    .reduce((acc, next) => acc + next, 0.0);
-
-  const nbRequest = requestsSummary.out.counts.total;
-  const requestsSeconds = requestsSummary.out.rps.total;
-  const failureRatio = requestsSummary.in.counts.koPercent;
-  const listMetric = recursivelyGetChildren(requestsSummary.children ?? []);
-
-  return {
-    date,
-    duration,
-    nbUsers,
-    nbRequest,
-    requestsSeconds,
-    failureRatio,
-    listMetric
-  };
-};
-
-const recursivelyGetChildren = (children: RequestsSummaryChild[]): ChildMetric[] =>
-  children.map((child) =>
-    child.children
-      ? { name: child.name, children: recursivelyGetChildren(child.children) }
-      : {
-          name: child.name,
-          nbRequest: child.out.counts.total,
-          failureRatio: child.in.counts.koPercent,
-          requestsSeconds: child.out.rps.total
-        }
-  );
-
-const logMetricsSummary = (logger: Logger, summary: MetricsSummary, elapsedTime: number, nextSummaryDelay: number) => {
   logger.group(
-    `Time: ${summary.date}, ${formatDuration(elapsedTime)} elapsed, next refresh in ${formatDuration(
+    `Time: ${date}, ${formatDuration(runLiveStatistics.durationInSeconds)} elapsed, next refresh in ${formatDuration(
       nextSummaryDelay
     )}`,
-    (summary.nbUsers > 0 ? `Number of concurrent users: ${summary.nbUsers}\n` : "") +
-      `Number of requests: ${summary.nbRequest}\n` +
-      `Number of requests per seconds: ${summary.requestsSeconds}\n` +
-      formatListMetrics(summary.listMetric)
+    `Number of concurrent users: ${runLiveStatistics.maxConcurrentUsers}\n` +
+      `Number of requests: ${runLiveStatistics.totalNumberOfRequests}\n` +
+      `Number of requests per seconds: ${runLiveStatistics.meanRequestsPerSecond}\n` +
+      formatListMetrics(listMetric)
   );
 };
 
-const formatListMetrics = (listMetric: ChildMetric[]): string => {
-  const recurs = (listMetric: ChildMetric[], level: number): string[] => {
+const formatListMetrics = (listMetric: Node[]): string => {
+  const recurs = (listMetric: Node[], level: number): string[] => {
     const padding = " ".repeat(2 * level);
-    const formatNode = (node: ChildMetricNode): string => `${padding}> Group ${node.name}`;
-    const formatLeaf = (leaf: ChildMetricLeaf): string[] => [
-      `${padding}> Request ${leaf.name}`,
-      `${padding}   Counts: ${leaf.nbRequest}`,
-      `${padding}   Requests per seconds: ${leaf.requestsSeconds}`,
-      `${padding}   Failure ratio: ${leaf.failureRatio}%`
+    const formatGroupNode = (groupName: GroupNode): string => `${padding}> Group ${groupName.name}`;
+    const formatRequestNode = (requestNode: RequestNode): string[] => [
+      `${padding}> Request ${requestNode.name}`,
+      `${padding}   Counts: ${requestNode.totalNumberOfRequests}`,
+      `${padding}   Requests per seconds: ${requestNode.meanRequestsPerSecond}`,
+      `${padding}   Failure ratio: ${requestNode.koPercentage}%`
     ];
     return listMetric.flatMap((child) =>
-      isChildMetricLeaf(child) ? formatLeaf(child) : [formatNode(child), ...recurs(child.children, level + 1)]
+      isGroupNode(child) ? [formatGroupNode(child), ...recurs(child.children, level + 1)] : formatRequestNode(child)
     );
   };
   return recurs(listMetric, 0).join("\n");
 };
-
-interface MetricsSummary {
-  date: string;
-  duration: string;
-  nbUsers: number;
-  nbRequest: number;
-  requestsSeconds: number;
-  failureRatio: number;
-  listMetric: ChildMetric[];
-}
-
-type ChildMetric = ChildMetricLeaf | ChildMetricNode;
-
-interface ChildMetricLeaf {
-  name: string;
-  nbRequest: number;
-  failureRatio: number;
-  requestsSeconds: number;
-}
-
-const isChildMetricLeaf = (o: ChildMetric): o is ChildMetricLeaf => !("children" in o);
-
-interface ChildMetricNode {
-  name: string;
-  children: ChildMetric[];
-}

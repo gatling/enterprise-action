@@ -1,18 +1,18 @@
 import { setInterval } from "timers/promises";
 
 import { ApiClient } from "../client/apiClient";
-import { Assertion, RunInformationResponse } from "../client/responses/runInformationResponse";
+import { Assertion } from "../client/responses/runInformationResponse";
 import { Logger } from "../log";
-import { getAndLogMetricsSummary } from "../run/metrics";
+import { logViewLiveStatistics } from "../run/metrics";
 import { StartedRun } from "../run/start";
-import { isRunning, statusName } from "../run/status";
 import { formatErrorMessage, console } from "../utils";
 import { Config } from "../config";
+import { RunStatus, RunStatusDisplayNames, RunStatusHelpers } from "../client/models/runStatus";
+import { ViewLiveResponse } from "../client/responses/liveInformationResponse";
 
 export interface FinishedRun {
   runId: String;
-  statusCode: number;
-  statusName: string;
+  status: RunStatus;
   assertions: Assertion[];
 }
 
@@ -43,8 +43,8 @@ const waitForRunEndLoop = async (
   logger: Logger,
   startedRun: StartedRun
 ): Promise<FinishedRun> => {
-  let runInfo: RunInformationResponse | undefined;
-  let oldStatus: number = -1;
+  let viewLiveResponse: ViewLiveResponse | undefined;
+  let oldStatus: RunStatus | undefined;
   let consecutiveErrorsCount = 0;
 
   const summaryEnabled = config.runSummaryLoggingConfiguration.enabled;
@@ -61,12 +61,12 @@ const waitForRunEndLoop = async (
     try {
       await intervalIterator.next(); // Initial delay even on first iteration because run duration might not be populated yet
 
-      runInfo = await client.getRunInformation(startedRun.runId);
-      const statusMsg = `Run status is now ${statusName(runInfo.status)} [${runInfo.status}]`;
-      runInfo.status !== oldStatus ? logger.log(statusMsg) : logger.debug(statusMsg);
-      oldStatus = runInfo.status;
+      viewLiveResponse = await client.getLiveInformation(startedRun.runId);
+      const statusMsg = `Run status is now ${RunStatusDisplayNames[viewLiveResponse.status]}`;
+      viewLiveResponse.status !== oldStatus ? logger.log(statusMsg) : logger.debug(statusMsg);
+      oldStatus = viewLiveResponse.status;
 
-      if (summaryEnabled && runInfo.injectStart > 0) {
+      if (summaryEnabled && viewLiveResponse.statistics) {
         iterationsSinceRunStart++;
         const elapsedTimeMillis = iterationsSinceRunStart * REFRESH_DELAY_MILLIS;
         logger.debug(`elapsedTimeMillis=${elapsedTimeMillis}`);
@@ -79,7 +79,8 @@ const waitForRunEndLoop = async (
           }
           const displayedRefreshInterval =
             Math.ceil(refreshIntervalMillis / REFRESH_DELAY_MILLIS) * REFRESH_DELAY_MILLIS; // Round up to nearest 5 seconds as it's our max resolution
-          await getAndLogMetricsSummary(client, logger, runInfo, elapsedTimeMillis, displayedRefreshInterval);
+
+          logViewLiveStatistics(logger, viewLiveResponse.statistics, displayedRefreshInterval);
           lastSummaryDisplayMillis = elapsedTimeMillis;
         }
       }
@@ -88,13 +89,14 @@ const waitForRunEndLoop = async (
       consecutiveErrorsCount++;
       handleError(logger, error, consecutiveErrorsCount);
     }
-  } while (runInfo === undefined || isRunning(runInfo.status));
+  } while (viewLiveResponse === undefined || RunStatusHelpers.isRunning(viewLiveResponse.status));
+
+  const { assertions } = await client.getRunInformation(startedRun.runId);
 
   return {
-    runId: runInfo.runId,
-    statusCode: runInfo.status,
-    statusName: statusName(runInfo.status),
-    assertions: runInfo.assertions
+    runId: startedRun.runId,
+    status: viewLiveResponse?.status,
+    assertions: assertions
   };
 };
 

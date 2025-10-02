@@ -1,18 +1,20 @@
-import { apiClient, ApiClientConfig } from "@src/client/apiClient";
+import { apiClient, ApiClientConfig } from "../../src/client/apiClient";
 import nock from "nock";
 import { expect, test } from "@jest/globals";
-import { StartSimulationResponse } from "@src/client/responses/startSimulationResponse";
+import { StartSimulationResponse } from "../../src/client/responses/startSimulationResponse";
 import { HttpClientError } from "@actions/http-client";
+import { PluginFlavor } from "../../src";
 
 const config: ApiClientConfig = {
-  baseUrl: "https://api.gatling.io/api/public",
-  apiToken: "my-token"
+  baseUrl: "https://api.gatling.io",
+  apiToken: "my-token",
+  pluginFlavor: PluginFlavor.GITHUB_ACTION,
+  pluginVersion: "42.0.2"
 };
 const client = apiClient(config);
 
 const simulation_id = "3e5d7e20-53c2-40ba-b0a2-0b0d93b33287";
-const simulation_start_expected_path = `/simulations/start?simulation=${simulation_id}`;
-const check_compatibility_expected_path = "/compatibility?clientName=gatling-enterprise-github-action&version=0.0.1";
+const simulation_start_expected_path = `/api/public/simulations/start?simulation=${simulation_id}`;
 
 const successfulStartedSimulationResponse: StartSimulationResponse = {
   className: "computerdatabase.ComputerDatabaseSimulation",
@@ -50,21 +52,4 @@ test("startSimulation not found error", async () => {
 
   const request = client.startSimulation(simulation_id);
   await expect(request).rejects.toStrictEqual(new HttpClientError("Unexpected empty response", 404));
-});
-
-test("checkCloudCompatibility success", () => {
-  nock(config.baseUrl).get(check_compatibility_expected_path).reply(200);
-  return client.checkCloudCompatibility();
-});
-
-test("checkCloudCompatibility not found error (ignored)", () => {
-  nock(config.baseUrl).get(check_compatibility_expected_path).reply(404);
-  return client.checkCloudCompatibility();
-});
-
-test("checkCloudCompatibility error", async () => {
-  nock(config.baseUrl).get(check_compatibility_expected_path).reply(400);
-
-  const request = client.checkCloudCompatibility();
-  await expect(request).rejects.toBeDefined();
 });

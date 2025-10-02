@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import { Validator } from "idonttrustlikethat";
 
-import { ApiClientConfig, config, Logger } from "@gatling-enterprise-runner/common";
+import { ApiClientConfig, config, Logger, PluginFlavor } from "@gatling-enterprise-runner/common";
 
 export const readConfig = (logger: Logger): config.Config => {
   const gatlingEnterpriseUrl = getGatlingEnterpriseUrlConfig();
@@ -67,9 +67,12 @@ const getApiConfig = (apiUrl: string): ApiClientConfig => {
     "api_token is required",
     "GATLING_ENTERPRISE_API_TOKEN"
   );
+
   return {
-    baseUrl: `${apiUrl}/api/public`,
-    apiToken
+    baseUrl: apiUrl,
+    apiToken: apiToken,
+    pluginFlavor: PluginFlavor.GITHUB_ACTION,
+    pluginVersion: require("package.json").version
   };
 };
 

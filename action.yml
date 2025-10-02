@@ -63,9 +63,7 @@ outputs:
     description: 'The URL of the reports page for this run (only when running on Gatling Enterprise Cloud).'
   runs_url:
     description: 'The URL of the runs page for this simulation (only when running on Gatling Enterprise Cloud).'
-  runs_status_code:
-    description: 'The code of the run''s final status.'
-  runs_status_name:
+  run_status_name:
     description: 'The name of the run''s final status.'
   run_assertions:
     description: 'The results of the run''s assertions, as a JSON array.'
