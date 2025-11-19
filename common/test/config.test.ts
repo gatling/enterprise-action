@@ -3,7 +3,6 @@ import {
   configKeysInputValidation,
   overrideLoadGeneratorsInputValidation,
   requiredBooleanValidation,
-  uuidValidation,
   parseStrictlyPositiveNumberValidation
 } from "@src/config";
 
@@ -23,18 +22,6 @@ test("requiredBooleanValidation", () => {
 
   const res4 = requiredBooleanValidation.validate("FALSE");
   expect(res4.ok && res4.value).toBe(false);
-});
-
-test("uuidValidation", () => {
-  expect(uuidValidation.validate("").ok).toBe(false);
-  expect(uuidValidation.validate("08d34c91f86247f8b19d8e92eb1abe71").ok).toBe(false);
-  expect(uuidValidation.validate("08d34c91f-862-47f8-b19d-8e92eb1abe71").ok).toBe(false);
-
-  const nullUuidRes = uuidValidation.validate("00000000-0000-0000-0000-000000000000");
-  expect(nullUuidRes.ok && nullUuidRes.value).toBe("00000000-0000-0000-0000-000000000000");
-
-  const validUUidRes = uuidValidation.validate("08d34c91-f862-47f8-b19d-8e92eb1abe71");
-  expect(validUUidRes.ok && validUUidRes.value).toBe("08d34c91-f862-47f8-b19d-8e92eb1abe71");
 });
 
 test("configKeysInputValidation", () => {
@@ -77,7 +64,8 @@ test("hostsByPoolInputValidation", () => {
   });
 
   expect(overrideLoadGeneratorsInputValidation.validate('{"bcf62ac8-90a0-4be7-acd0-d7e87e3cbd66":{}}').ok).toBe(false);
-  expect(overrideLoadGeneratorsInputValidation.validate('{"key_1":{"size":1}}').ok).toBe(false);
+  expect(overrideLoadGeneratorsInputValidation.validate('{"key_1":{"size":1}}').ok).toBe(true);
+  expect(overrideLoadGeneratorsInputValidation.validate('{"":{"size":1}}').ok).toBe(false);
   expect(overrideLoadGeneratorsInputValidation.validate('"bcf62ac8-90a0-4be7-acd0-d7e87e3cbd66":{"size":1}').ok).toBe(
     false
   );

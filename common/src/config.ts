@@ -41,9 +41,6 @@ export const requiredBooleanValidation = requiredInputValidation.and((str) => {
       ? Ok(false)
       : Err(`Invalid boolean value: ${str}`);
 });
-export const uuidValidation = string.filter((str) =>
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str)
-);
 export const jsonValidation = string.and((str): Result<string, any> => {
   try {
     return Ok(JSON.parse(str));
@@ -61,7 +58,7 @@ const configKeyValueValidation = union(string, number, boolean).map((value) =>
 const configKeysValidation = jsonValidation.then(dictionary(string, configKeyValueValidation));
 export const configKeysInputValidation = optionalInputValidation.then(configKeysValidation.optional());
 const overrideLoadGeneratorsValidation = jsonValidation.then(
-  dictionary(uuidValidation, object({ size: number, weight: number.optional() }))
+  dictionary(requiredInputValidation, object({ size: number, weight: number.optional() }))
 );
 export const overrideLoadGeneratorsInputValidation = optionalInputValidation.then(
   overrideLoadGeneratorsValidation.optional()
