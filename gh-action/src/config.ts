@@ -77,7 +77,11 @@ const getApiConfig = (apiUrl: string): ApiClientConfig => {
 };
 
 const getRunConfig = (): config.RunConfig => {
-  const simulationId = getValidatedInput("simulation_id", config.uuidValidation, "simulation_id must be a valid UUID");
+  const simulationId = getValidatedInput(
+    "simulation_id",
+    config.requiredInputValidation,
+    "simulation_id must be a non-empty string"
+  );
   const extraSystemProperties = getValidatedInput(
     "extra_system_properties",
     config.configKeysInputValidation,
