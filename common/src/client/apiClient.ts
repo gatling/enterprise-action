@@ -5,7 +5,6 @@ import { OutgoingHttpHeaders } from "http";
 import { StartSimulationRequest } from "./requests/startSimulationRequest";
 import { StartSimulationResponse } from "./responses/startSimulationResponse";
 import { RunInformationResponse } from "./responses/runInformationResponse";
-import { SeriesResponse } from "./responses/seriesResponse";
 import { RequestsSummaryResponse } from "./responses/requestsSummaryResponse";
 import { RunId } from "./models/runId";
 import { PluginFlavor } from "./models/pluginFlavor";
@@ -23,7 +22,6 @@ export interface ApiClient {
   getLiveInformation: (runId: RunId) => Promise<ViewLiveResponse>;
   getRunInformation: (runId: string) => Promise<RunInformationResponse>;
   abortRun: (runId: string) => Promise<boolean>;
-  getConcurrentUserMetric: (runId: string, scenario: string) => Promise<SeriesResponse[]>;
   getRequestsSummary: (runId: string) => Promise<RequestsSummaryResponse>;
 }
 
@@ -36,21 +34,9 @@ export const apiClient = (conf: ApiClientConfig): ApiClient => {
       getJson(client, conf, `/api/private/plugins/runs/${runId}/views/live`, {}, pluginHeaders(conf)),
     getRunInformation: (runId) => getJson(client, conf, "/api/public/run", { run: runId }),
     abortRun: (runId) => abortRun(client, conf, runId),
-    getConcurrentUserMetric: (runId, scenario) =>
-      getJson(client, conf, "/api/public/series", seriesParams(runId, scenario)),
     getRequestsSummary: (runId) => getJson(client, conf, "/api/public/summaries/requests", { run: runId })
   };
 };
-
-const seriesParams = (runId: string, scenario: string) => ({
-  run: runId,
-  scenario: scenario,
-  group: "",
-  request: "",
-  node: "",
-  remote: "",
-  metric: "usrActive"
-});
 
 const abortRun = async (client: HttpClient, conf: ApiClientConfig, runId: string): Promise<boolean> => {
   try {
