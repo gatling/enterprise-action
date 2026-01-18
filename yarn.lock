@@ -1384,12 +1384,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.19.28":
-  version: 20.19.28
-  resolution: "@types/node@npm:20.19.28"
+"@types/node@npm:20.19.30":
+  version: 20.19.30
+  resolution: "@types/node@npm:20.19.30"
   dependencies:
     undici-types: ~6.21.0
-  checksum: c59372e6cfd8c315dda31619fef41085550412e4911ca0d6995c3340f7e55cf17772310d0669a25e5bd5458e98cdb8a30ec03bc822014d94ebbe91e6f7b5edb4
+  checksum: 32e80a104b8fcdcacc52a98f0a197a33fd264325501f9af1653cbe9c07fdb6d11130cb0111c65fd353112e6a5af1e5f106714411b1b252d06f0f58760153a1e3
   languageName: node
   linkType: hard
 
@@ -4078,7 +4078,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
-    "@types/node": 20.19.28
+    "@types/node": 20.19.30
     "@vercel/ncc": 0.38.4
     jest: 30.2.0
     js-yaml: 4.1.1
