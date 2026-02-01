@@ -24,7 +24,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@actions/http-client@npm:3.0.1, @actions/http-client@npm:^3.0.1":
+"@actions/http-client@npm:4.0.0":
+  version: 4.0.0
+  resolution: "@actions/http-client@npm:4.0.0"
+  dependencies:
+    tunnel: ^0.0.6
+    undici: ^6.23.0
+  checksum: a3ee16f3b342bbb0bcf704fc49e1e9998f53b69702b8bde505f0f0d4909b1433296a1b79c3afb0267cbc376a496f78d64f21c01ac7b753c002552dbcd3938ac5
+  languageName: node
+  linkType: hard
+
+"@actions/http-client@npm:^3.0.1":
   version: 3.0.1
   resolution: "@actions/http-client@npm:3.0.1"
   dependencies:
@@ -716,7 +726,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gatling-enterprise-runner/common@workspace:common"
   dependencies:
-    "@actions/http-client": 3.0.1
+    "@actions/http-client": 4.0.0
     date-fns: 4.1.0
     idonttrustlikethat: 2.1.2
   languageName: unknown
@@ -4603,6 +4613,13 @@ __metadata:
   dependencies:
     "@fastify/busboy": ^2.0.0
   checksum: a25b5462c1b6ffb974f5ffc492ffd64146a9983aad0cbda6fde65e2b22f6f1acd43f09beacc66cc47624a113bd0c684ffc60366102b6a21b038fbfafb7d75195
+  languageName: node
+  linkType: hard
+
+"undici@npm:^6.23.0":
+  version: 6.23.0
+  resolution: "undici@npm:6.23.0"
+  checksum: f0953920330375e76d1614381af07da9d7c21ad3244d0785b3f7bd4072635c20a1f432ef3a129baa3e4a92278ce32e9ea2ca8b5f0e0554a5739222af332c08fe
   languageName: node
   linkType: hard
 
