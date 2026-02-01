@@ -9,7 +9,7 @@
     "start": "ncc run ./src/index.ts"
   },
   "dependencies": {
-    "@actions/core": "2.0.2",
+    "@actions/core": "3.0.0",
     "@gatling-enterprise-runner/common": "0.0.0"
   }
 }
