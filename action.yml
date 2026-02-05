@@ -68,6 +68,6 @@ outputs:
   run_assertions:
     description: 'The results of the run''s assertions, as a JSON array.'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'gh-action/dist/index.js'
   post: 'gh-action/dist/index.js'
