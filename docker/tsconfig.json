@@ -4,7 +4,8 @@
     "paths": {
       "@src/*": ["src/*"]
     },
-    "rootDir": "src",
+    "rootDir": "./src",
+    "outDir": "./dist",
     "lib": ["es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Error", "ESNext.Iterator", "ESNext.Promise"],
     "module": "nodenext",
     "moduleResolution": "node16",
@@ -12,12 +13,14 @@
     "esModuleInterop": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "composite": true,
+    "isolatedModules": true
   },
   "references": [
     {
       "path": "../common"
     }
   ],
-  "exclude": ["dist", "**/*.test.ts", "jest.config.ts"]
+  "include": ["./src/**/*.ts"]
 }

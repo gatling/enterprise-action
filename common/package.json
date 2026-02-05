@@ -2,12 +2,21 @@
   "name": "@gatling-enterprise-runner/common",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/index",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "test": "jest"
+    "build": "tsc",
+    "test": "yarn node --experimental-vm-modules ../node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@actions/http-client": "3.0.1",
+    "@actions/http-client": "4.0.0",
     "date-fns": "4.1.0",
     "idonttrustlikethat": "2.1.2"
   }

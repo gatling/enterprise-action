@@ -1,9 +1,9 @@
-import { apiClient, ApiClientConfig } from "../../src/client/apiClient";
+import { apiClient, ApiClientConfig } from "@src/client/apiClient.js";
 import nock from "nock";
 import { expect, test } from "@jest/globals";
-import { StartSimulationResponse } from "../../src/client/responses/startSimulationResponse";
+import { StartSimulationResponse } from "@src/client/responses/startSimulationResponse.js";
 import { HttpClientError } from "@actions/http-client";
-import { PluginFlavor } from "../../src";
+import { PluginFlavor } from "@src/client/models/pluginFlavor.js";
 
 const config: ApiClientConfig = {
   baseUrl: "https://api.gatling.io",

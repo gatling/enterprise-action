@@ -1,13 +1,13 @@
-import { apiClient } from "./client/apiClient";
-import { Assertion } from "./client/responses/runInformationResponse";
-import { Config } from "./config";
-import { Logger } from "./log";
-import { Output } from "./output";
-import { FinishedRun, waitForRunEnd } from "./run/ongoing";
-import { StartedRun, startRun } from "./run/start";
-import { StateStore } from "./state";
-import { formatErrorMessage, console } from "./utils";
-import { RunStatusDisplayNames, RunStatusHelpers } from "./client/models/runStatus";
+import { apiClient } from "./client/apiClient.js";
+import { Assertion } from "./client/responses/runInformationResponse.js";
+import { Config } from "./config.js";
+import { Logger } from "./log.js";
+import { Output } from "./output.js";
+import { FinishedRun, waitForRunEnd } from "./run/ongoing.js";
+import { StartedRun, startRun } from "./run/start.js";
+import { StateStore } from "./state.js";
+import { formatErrorMessage, console } from "./utils/index.js";
+import { RunStatusDisplayNames, RunStatusHelpers } from "./client/models/runStatus.js";
 
 const { red, green, bright } = console;
 

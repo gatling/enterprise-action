@@ -31,7 +31,7 @@ yarn format
 Run locally (input can be passed with environment variables, e.g. use `INPUT_FOO` for the input named `foo`):
 
 ```shell
-yarn gh-action-start
+yarn start-gh-action
 ```
 
 ### Run locally with `act`
@@ -52,7 +52,7 @@ Enable debug logs with the environment variable `DEBUG=true`.
 Run locally (input must be passed with environment variables, e.g. `GATLING_ENTERPRISE_API_TOKEN`):
 
 ```shell
-yarn docker-runner-start
+yarn start-docker
 ```
 
 ### Run locally as a docker container

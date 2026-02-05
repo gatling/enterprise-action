@@ -4,12 +4,13 @@
   "description": "Gatling Enterprise GitHub Action",
   "private": true,
   "scripts": {
-    "test": "jest",
-    "package": "ncc build ./src/index.ts",
-    "start": "ncc run ./src/index.ts"
+    "check": "tsc --noEmit",
+    "test": "yarn node --experimental-vm-modules ../node_modules/jest/bin/jest.js",
+    "package": "yarn run check && esbuild src/index.ts --outfile=dist/index.js --bundle --platform=node --target=node20 --conditions=default,module,node,require,import",
+    "start": "node dist/index.js"
   },
   "dependencies": {
-    "@actions/core": "2.0.2",
+    "@actions/core": "3.0.0",
     "@gatling-enterprise-runner/common": "0.0.0"
   }
 }

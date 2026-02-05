@@ -2,13 +2,13 @@ import { HttpClient, HttpClientError, HttpCodes } from "@actions/http-client";
 import { TypedResponse } from "@actions/http-client/lib/interfaces";
 import { OutgoingHttpHeaders } from "http";
 
-import { StartSimulationRequest } from "./requests/startSimulationRequest";
-import { StartSimulationResponse } from "./responses/startSimulationResponse";
-import { RunInformationResponse } from "./responses/runInformationResponse";
-import { RequestsSummaryResponse } from "./responses/requestsSummaryResponse";
-import { RunId } from "./models/runId";
-import { PluginFlavor } from "./models/pluginFlavor";
-import { ViewLiveResponse } from "./responses/liveInformationResponse";
+import { StartSimulationRequest } from "./requests/startSimulationRequest.js";
+import { StartSimulationResponse } from "./responses/startSimulationResponse.js";
+import { RunInformationResponse } from "./responses/runInformationResponse.js";
+import { RequestsSummaryResponse } from "./responses/requestsSummaryResponse.js";
+import { RunId } from "./models/runId.js";
+import { PluginFlavor } from "./models/pluginFlavor.js";
+import { ViewLiveResponse } from "./responses/liveInformationResponse.js";
 
 export interface ApiClientConfig {
   baseUrl: string;

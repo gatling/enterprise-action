@@ -1,8 +1,8 @@
 import { format } from "date-fns";
 
-import { Logger } from "../log";
-import { formatDuration } from "../utils";
-import { GroupNode, isGroupNode, Node, RequestNode, Statistics } from "../client/responses/liveInformationResponse";
+import { Logger } from "../log.js";
+import { formatDuration } from "../utils/index.js";
+import { GroupNode, isGroupNode, Node, RequestNode, Statistics } from "../client/responses/liveInformationResponse.js";
 
 export const logViewLiveStatistics = (
   logger: Logger,

@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import { formatDuration } from "@src/utils/duration";
+import { formatDuration } from "@src/utils/duration.js";
 
 test("formatDuration d/h/m/s", () => {
   expect(formatDuration(181297)).toBe("2d 2h 21m 37s");

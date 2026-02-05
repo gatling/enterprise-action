@@ -1,11 +1,11 @@
-export { runCleanup } from "./runCleanup";
-export { runMain } from "./runMain";
-export { Output, OutputKey } from "./output";
-export { StateStore } from "./state";
-export { Logger } from "./log";
-export { ApiClientConfig } from "./client/apiClient";
-export { PluginFlavor } from "./client/models/pluginFlavor";
+export { runCleanup } from "./runCleanup.js";
+export { runMain } from "./runMain.js";
+export type { Output, OutputKey } from "./output.js";
+export type { StateStore } from "./state.js";
+export type { Logger } from "./log.js";
+export type { ApiClientConfig } from "./client/apiClient.js";
+export { PluginFlavor } from "./client/models/pluginFlavor.js";
 
-export * as config from "./config";
-export * as logging from "./log";
-export * as utils from "./utils";
+export * as config from "./config.js";
+export * as logging from "./log.js";
+export * as utils from "./utils/index.js";

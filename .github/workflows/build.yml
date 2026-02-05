@@ -36,6 +36,7 @@ jobs:
           yarn plugin import workspace-tools
           yarn install --immutable
           yarn format-check
+          yarn check
           yarn test
           yarn package
 

@@ -4,7 +4,7 @@ import {
   overrideLoadGeneratorsInputValidation,
   requiredBooleanValidation,
   parseStrictlyPositiveNumberValidation
-} from "@src/config";
+} from "@src/config.js";
 
 test("requiredBooleanValidation", () => {
   expect(requiredBooleanValidation.validate("").ok).toBe(false);

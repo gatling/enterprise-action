@@ -1,4 +1,4 @@
-import { RunStatus } from "../models/runStatus";
+import { RunStatus } from "../models/runStatus.js";
 
 export interface ViewLiveResponse {
   status: RunStatus;

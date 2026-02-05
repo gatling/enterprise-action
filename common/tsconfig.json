@@ -14,7 +14,8 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "composite": true
+    "composite": true,
+    "isolatedModules": true
   },
-  "exclude": ["dist", "**/*.test.ts", "jest.config.ts"]
+  "include": ["./src/**/*.ts"]
 }

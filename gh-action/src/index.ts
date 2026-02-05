@@ -1,9 +1,9 @@
 import { runCleanup, runMain } from "@gatling-enterprise-runner/common";
 
-import { readConfig } from "./config";
-import { gitHubLogger } from "./log";
-import { gitHubOutput } from "./output";
-import { actionState } from "./state";
+import { readConfig } from "./config.js";
+import { gitHubLogger } from "./log.js";
+import { gitHubOutput } from "./output.js";
+import { actionState } from "./state.js";
 
 const run = async () => {
   switch (actionState.getPostStatus()) {
