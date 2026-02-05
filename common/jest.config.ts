@@ -1,18 +1,20 @@
-import { JestConfigWithTsJest, pathsToModuleNameMapper } from "ts-jest";
+import { TS_EXT_TO_TREAT_AS_ESM, ESM_TS_TRANSFORM_PATTERN } from "ts-jest";
+import type { Config } from "jest";
 
-const { compilerOptions } = require("./tsconfig.json");
-
-const jestConfig: JestConfigWithTsJest = {
+const jestConfig: Config = {
   clearMocks: true,
   moduleFileExtensions: ["js", "ts"],
   testMatch: ["**/*.test.ts"],
+  extensionsToTreatAsEsm: [...TS_EXT_TO_TREAT_AS_ESM],
   transform: {
-    "^.+\\.ts$": "ts-jest"
+    [ESM_TS_TRANSFORM_PATTERN]: ["ts-jest", { useESM: true }]
   },
   verbose: true,
   roots: ["<rootDir>"],
-  modulePaths: [compilerOptions.baseUrl],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths)
+  modulePaths: ["./"],
+  moduleNameMapper: {
+    "^@src/(.*).js$": "<rootDir>/src/$1"
+  }
 };
 
 export default jestConfig;

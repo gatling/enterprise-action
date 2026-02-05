@@ -1,5 +1,6 @@
-import { ApiClientConfig } from "./client/apiClient";
 import { boolean, dictionary, Err, number, object, Ok, Result, string, union } from "idonttrustlikethat";
+
+import { ApiClientConfig } from "./client/apiClient.js";
 
 export interface Config {
   gatlingEnterpriseUrl: string;

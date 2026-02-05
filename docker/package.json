@@ -4,9 +4,10 @@
   "description": "Gatling Enterprise Docker runner",
   "private": true,
   "scripts": {
-    "test": "jest",
-    "package": "ncc build ./src/index.ts",
-    "start": "ncc run ./src/index.ts"
+    "check": "tsc --noEmit",
+    "test": "yarn node --experimental-vm-modules ../node_modules/jest/bin/jest.js",
+    "package": "yarn run check && esbuild src/index.ts --outfile=dist/index.js --bundle --platform=node --target=node20 --conditions=default,module,node,require,import",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "@gatling-enterprise-runner/common": "0.0.0",

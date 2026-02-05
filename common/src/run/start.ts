@@ -1,5 +1,5 @@
-import { ApiClient } from "../client/apiClient";
-import { Config } from "../config";
+import { ApiClient } from "../client/apiClient.js";
+import { Config } from "../config.js";
 
 export interface StartedRun {
   runId: string;

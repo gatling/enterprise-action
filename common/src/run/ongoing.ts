@@ -1,14 +1,14 @@
 import { setInterval } from "timers/promises";
 
-import { ApiClient } from "../client/apiClient";
-import { Assertion } from "../client/responses/runInformationResponse";
-import { Logger } from "../log";
-import { logViewLiveStatistics } from "../run/metrics";
-import { StartedRun } from "../run/start";
-import { formatErrorMessage, console } from "../utils";
-import { Config } from "../config";
-import { RunStatus, RunStatusDisplayNames, RunStatusHelpers } from "../client/models/runStatus";
-import { ViewLiveResponse } from "../client/responses/liveInformationResponse";
+import { ApiClient } from "../client/apiClient.js";
+import { Assertion } from "../client/responses/runInformationResponse.js";
+import { Logger } from "../log.js";
+import { logViewLiveStatistics } from "../run/metrics.js";
+import { StartedRun } from "../run/start.js";
+import { formatErrorMessage, console } from "../utils/index.js";
+import { Config } from "../config.js";
+import { RunStatus, RunStatusDisplayNames, RunStatusHelpers } from "../client/models/runStatus.js";
+import { ViewLiveResponse } from "../client/responses/liveInformationResponse.js";
 
 export interface FinishedRun {
   runId: String;

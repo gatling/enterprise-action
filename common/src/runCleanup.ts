@@ -1,7 +1,7 @@
-import { apiClient } from "./client/apiClient";
-import { Config } from "./config";
-import { Logger } from "./log";
-import { formatErrorMessage } from "./utils/error";
+import { apiClient } from "./client/apiClient.js";
+import { Config } from "./config.js";
+import { Logger } from "./log.js";
+import { formatErrorMessage } from "./utils/error.js";
 
 export const runCleanup = async (logger: Logger, config: Config, runId: string): Promise<void> => {
   try {
