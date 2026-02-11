@@ -39,7 +39,7 @@ export const dotEnvOutput = async (logger: Logger, dotEnvOutputPath?: string): P
       await fs.writeFile(dotEnvOutputPath, "", "utf8");
       logger.log(`Outputs will be written to '${dotEnvOutputPath}'`);
     } catch (e) {
-      throw new Error(`Unable to write outputs to '${dotEnvOutputPath}', cause by: ${utils.formatErrorMessage(e)}`);
+      throw new Error(`Unable to write outputs to '${dotEnvOutputPath}', caused by: ${utils.formatErrorMessage(e)}`);
     }
     return {
       set: (key, value) =>
