@@ -59,6 +59,6 @@ yarn start-docker
 
 ```shell
 yarn package
-docker build --tag <repository name>/enterprise-runner:latest ./docker
-docker run --env GATLING_ENTERPRISE_API_TOKEN=<env> --env SIMULATION_ID=<simulation id> [other env vars...] <repository name>/enterprise-runner:latest 
+docker build --tag gatlingcorp/enterprise-runner:<tag> ./docker
+docker run --env GATLING_ENTERPRISE_API_TOKEN=<env> --env SIMULATION_ID=<simulation id> [other env vars...] gatlingcorp/enterprise-runner:<tag> 
 ```
