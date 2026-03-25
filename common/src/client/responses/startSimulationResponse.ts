@@ -1,6 +1,4 @@
 export interface StartSimulationResponse {
-  className: string;
-  runId: string;
-  reportsPath?: string;
-  runsPath?: string;
+  data: { _id: string };
+  metadata: { urls: { run: string } };
 }

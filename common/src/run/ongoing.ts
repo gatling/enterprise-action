@@ -7,12 +7,12 @@ import { logViewLiveStatistics } from "../run/metrics.js";
 import { StartedRun } from "../run/start.js";
 import { formatErrorMessage, console } from "../utils/index.js";
 import { Config } from "../config.js";
-import { RunStatus, RunStatusDisplayNames, RunStatusHelpers } from "../client/models/runStatus.js";
-import { ViewLiveResponse } from "../client/responses/liveInformationResponse.js";
+import { Outcome, ViewLiveResponse } from "../client/responses/liveInformationResponse.js";
 
 export interface FinishedRun {
-  runId: String;
-  status: RunStatus;
+  runId: string;
+  status: string;
+  outcome: Outcome;
   assertions: Assertion[];
 }
 
@@ -44,7 +44,7 @@ const waitForRunEndLoop = async (
   startedRun: StartedRun
 ): Promise<FinishedRun> => {
   let viewLiveResponse: ViewLiveResponse | undefined;
-  let oldStatus: RunStatus | undefined;
+  let oldStatus: string | undefined;
   let consecutiveErrorsCount = 0;
 
   const summaryEnabled = config.runSummaryLoggingConfiguration.enabled;
@@ -62,7 +62,7 @@ const waitForRunEndLoop = async (
       await intervalIterator.next(); // Initial delay even on first iteration because run duration might not be populated yet
 
       viewLiveResponse = await client.getLiveInformation(startedRun.runId);
-      const statusMsg = `Run status is now ${RunStatusDisplayNames[viewLiveResponse.status]}`;
+      const statusMsg = `Run status is now ${viewLiveResponse.status}`;
       viewLiveResponse.status !== oldStatus ? logger.log(statusMsg) : logger.debug(statusMsg);
       oldStatus = viewLiveResponse.status;
 
@@ -89,12 +89,14 @@ const waitForRunEndLoop = async (
       consecutiveErrorsCount++;
       handleError(logger, error, consecutiveErrorsCount);
     }
-  } while (viewLiveResponse === undefined || RunStatusHelpers.isRunning(viewLiveResponse.status));
+  } while (viewLiveResponse === undefined || viewLiveResponse.outcome === undefined);
 
-  const { assertions } = await client.getRunInformation(startedRun.runId);
+  const runDetails = await client.getRunResult(startedRun.runId);
+  const assertions = runDetails.data._result?.assertions ?? [];
 
   return {
     runId: startedRun.runId,
+    outcome: viewLiveResponse.outcome,
     status: viewLiveResponse?.status,
     assertions: assertions
   };

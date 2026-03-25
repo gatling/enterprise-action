@@ -7,7 +7,6 @@ import { FinishedRun, waitForRunEnd } from "./run/ongoing.js";
 import { StartedRun, startRun } from "./run/start.js";
 import { StateStore } from "./state.js";
 import { formatErrorMessage, console } from "./utils/index.js";
-import { RunStatusDisplayNames, RunStatusHelpers } from "./client/models/runStatus.js";
 
 const { red, green, bright } = console;
 
@@ -24,7 +23,6 @@ export const runMain = async (output: Output, logger: Logger, config: Config, st
 
     await output.set("run_id", startedRun.runId);
     await output.set("reports_url", startedRun.reportsUrl);
-    await output.set("runs_url", startedRun.runsUrl);
 
     if (config.waitForRunEnd) {
       const finishedRun = await waitForRunEnd(client, config, logger, startedRun);
@@ -32,7 +30,7 @@ export const runMain = async (output: Output, logger: Logger, config: Config, st
       logAssertionResults(logger, finishedRun.assertions);
       logResult(logger, config, startedRun, finishedRun);
 
-      await output.set("run_status_name", RunStatusDisplayNames[finishedRun.status]);
+      await output.set("run_status_name", finishedRun.status);
       await output.set("run_assertions", finishedRun.assertions);
     } else {
       state.setFinished(); // Not waiting for run end, no cleanup needed
@@ -46,7 +44,6 @@ export const runMain = async (output: Output, logger: Logger, config: Config, st
 const logStart = (logger: Logger, config: Config, startedRun: StartedRun): void => {
   logger.log(bright(`Started run ${startedRun.runId} for simulation ${config.run.simulationId}`));
   logger.annotateNotice(`Run reports will be available at ${startedRun.reportsUrl}`, "Gatling Enterprise reports");
-  logger.annotateNotice(`Runs history is available at ${startedRun.runsUrl}`, "Gatling Enterprise runs history");
   logger.log("");
 };
 
@@ -56,14 +53,14 @@ const logAssertionResults = (logger: Logger, assertions: Assertion[]): void => {
     logger.log("");
     logger.log(bright("Assertion results:"));
     for (const assertion of assertions) {
-      if (assertion.result) {
+      if (assertion.succeed) {
         logger.log(green(`> ${assertion.message} succeeded with value ${assertion.actualValue}`));
       } else {
         logger.log(red(`> ${assertion.message} failed with value ${assertion.actualValue}`));
       }
     }
 
-    const assertionErrorsCount = assertions.reduce((acc, assertion) => (assertion.result ? acc : acc + 1), 0);
+    const assertionErrorsCount = assertions.reduce((acc, assertion) => (assertion.succeed ? acc : acc + 1), 0);
     if (assertionErrorsCount > 0) {
       logger.annotateError(
         `${assertionErrorsCount} out of ${assertionsCount} assertions failed`,
@@ -78,10 +75,10 @@ const logAssertionResults = (logger: Logger, assertions: Assertion[]): void => {
 const logResult = (logger: Logger, config: Config, startedRun: StartedRun, finishedRun: FinishedRun) => {
   logger.log("");
   logger.log(bright("Simulation result:"));
-  if (RunStatusHelpers.isSuccessful(finishedRun.status)) {
-    logger.log(green(`Run ${finishedRun.runId} finished with status ${RunStatusDisplayNames[finishedRun.status]}`));
+  if (finishedRun.outcome.successful) {
+    logger.log(green(`Run ${finishedRun.runId} finished with status ${finishedRun.status}`));
   } else {
-    const errorMessage = `Run ${finishedRun.runId} failed with status ${RunStatusDisplayNames[finishedRun.status]}`;
+    const errorMessage = `Run ${finishedRun.runId} failed with status ${finishedRun.status}`;
     logger.annotateError(errorMessage);
     if (config.failActionOnRunFailure) {
       process.exitCode = 1;
@@ -90,5 +87,4 @@ const logResult = (logger: Logger, config: Config, startedRun: StartedRun, finis
 
   logger.log("");
   logger.log(bright(`See the run reports at ${startedRun.reportsUrl}`));
-  logger.log(bright(`See the runs history at ${startedRun.runsUrl}`));
 };

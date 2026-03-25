@@ -1,8 +1,11 @@
-import { RunStatus } from "../models/runStatus.js";
-
 export interface ViewLiveResponse {
-  status: RunStatus;
+  status: string;
+  outcome?: Outcome;
   statistics?: Statistics;
+}
+
+export interface Outcome {
+  successful: boolean;
 }
 
 export interface Statistics {
