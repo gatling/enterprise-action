@@ -4,8 +4,7 @@ import { OutgoingHttpHeaders } from "http";
 
 import { StartSimulationRequest } from "./requests/startSimulationRequest.js";
 import { StartSimulationResponse } from "./responses/startSimulationResponse.js";
-import { RunInformationResponse } from "./responses/runInformationResponse.js";
-import { RequestsSummaryResponse } from "./responses/requestsSummaryResponse.js";
+import { RunDetailsResponse } from "./responses/runInformationResponse.js";
 import { RunId } from "./models/runId.js";
 import { PluginFlavor } from "./models/pluginFlavor.js";
 import { ViewLiveResponse } from "./responses/liveInformationResponse.js";
@@ -20,27 +19,25 @@ export interface ApiClientConfig {
 export interface ApiClient {
   startSimulation: (simulationId: string, options?: StartSimulationRequest) => Promise<StartSimulationResponse>;
   getLiveInformation: (runId: RunId) => Promise<ViewLiveResponse>;
-  getRunInformation: (runId: string) => Promise<RunInformationResponse>;
-  abortRun: (runId: string) => Promise<boolean>;
-  getRequestsSummary: (runId: string) => Promise<RequestsSummaryResponse>;
+  getRunResult: (runId: string) => Promise<RunDetailsResponse>;
+  stopRun: (runId: string) => Promise<boolean>;
 }
 
 export const apiClient = (conf: ApiClientConfig): ApiClient => {
   const client = new HttpClient();
   return {
     startSimulation: (simulationId, options) =>
-      postJson(client, conf, "/api/public/simulations/start", options ?? {}, { simulation: simulationId }),
+      postJson(client, conf, `/api/public/v2/tests/${simulationId}/runs`, options ?? {}),
     getLiveInformation: (runId) =>
       getJson(client, conf, `/api/private/plugins/runs/${runId}/views/live`, {}, pluginHeaders(conf)),
-    getRunInformation: (runId) => getJson(client, conf, "/api/public/run", { run: runId }),
-    abortRun: (runId) => abortRun(client, conf, runId),
-    getRequestsSummary: (runId) => getJson(client, conf, "/api/public/summaries/requests", { run: runId })
+    getRunResult: (runId) => getJson(client, conf, `/api/public/v2/runs/${runId}`),
+    stopRun: (runId) => stopRun(client, conf, runId)
   };
 };
 
-const abortRun = async (client: HttpClient, conf: ApiClientConfig, runId: string): Promise<boolean> => {
+const stopRun = async (client: HttpClient, conf: ApiClientConfig, runId: string): Promise<boolean> => {
   try {
-    await postJson(client, conf, "/api/public/simulations/abort", {}, { run: runId });
+    await postJson(client, conf, `/api/public/v2/runs/${runId}/actions/stop`, {});
     return true;
   } catch (error) {
     if (

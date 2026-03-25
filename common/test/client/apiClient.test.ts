@@ -14,13 +14,11 @@ const config: ApiClientConfig = {
 const client = apiClient(config);
 
 const simulation_id = "3e5d7e20-53c2-40ba-b0a2-0b0d93b33287";
-const simulation_start_expected_path = `/api/public/simulations/start?simulation=${simulation_id}`;
+const simulation_start_expected_path = `/api/public/v2/tests/${simulation_id}/runs`;
 
 const successfulStartedSimulationResponse: StartSimulationResponse = {
-  className: "computerdatabase.ComputerDatabaseSimulation",
-  runId: "bd4e73bb-ac41-4786-ade6-6ce7f26e7fb2",
-  reportsPath: "/o/demo-environment/simulations/reports/bd4e73bb-ac41-4786-ade6-6ce7f26e7fb2",
-  runsPath: "/o/demo-environment/simulations/runs/3e5d7e20-53c2-40ba-b0a2-0b0d93b33287"
+  data: { _id: "bd4e73bb-ac41-4786-ade6-6ce7f26e7fb2" },
+  metadata: { urls: { run: "/o/demo-environment/runs/bd4e73bb-ac41-4786-ade6-6ce7f26e7fb2" } }
 };
 
 const unauthorizedResponse = {

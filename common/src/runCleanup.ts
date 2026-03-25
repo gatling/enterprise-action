@@ -6,7 +6,7 @@ import { formatErrorMessage } from "./utils/error.js";
 export const runCleanup = async (logger: Logger, config: Config, runId: string): Promise<void> => {
   try {
     const client = apiClient(config.api);
-    const stopped = await client.abortRun(runId);
+    const stopped = await client.stopRun(runId);
     if (stopped) {
       logger.log("Successfully stopped ongoing run");
     } else {
