@@ -2,6 +2,8 @@ import { Validator } from "idonttrustlikethat";
 
 import { config, Logger, ApiClientConfig, PluginFlavor } from "@gatling-enterprise-runner/common";
 
+import { version } from "@projectRoot/package.json";
+
 export interface DockerConfig extends config.Config {
   outputDotEnvPath: string | undefined;
 }
@@ -90,7 +92,7 @@ const getApiConfig = (apiUrl: string): ApiClientConfig => {
     baseUrl: apiUrl,
     apiToken: apiToken,
     pluginFlavor: PluginFlavor.ENTERPRISE_RUNNER,
-    pluginVersion: require("package.json").version
+    pluginVersion: version
   };
 };
 

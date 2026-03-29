@@ -3,6 +3,8 @@ import { Validator } from "idonttrustlikethat";
 
 import { ApiClientConfig, config, Logger, PluginFlavor } from "@gatling-enterprise-runner/common";
 
+import { version } from "@projectRoot/package.json";
+
 export const readConfig = (logger: Logger): config.Config => {
   const gatlingEnterpriseUrl = getGatlingEnterpriseUrlConfig();
   const apiUrl = getApiUrlConfig(gatlingEnterpriseUrl);
@@ -72,7 +74,7 @@ const getApiConfig = (apiUrl: string): ApiClientConfig => {
     baseUrl: apiUrl,
     apiToken: apiToken,
     pluginFlavor: PluginFlavor.GITHUB_ACTION,
-    pluginVersion: require("package.json").version
+    pluginVersion: version
   };
 };
 
