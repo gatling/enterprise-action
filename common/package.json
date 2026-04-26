@@ -16,7 +16,7 @@
     "test": "yarn node --experimental-vm-modules ../node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@actions/http-client": "4.0.0",
+    "@actions/http-client": "4.0.1",
     "date-fns": "4.1.0",
     "idonttrustlikethat": "2.1.2"
   }

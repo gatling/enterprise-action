@@ -24,7 +24,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@actions/http-client@npm:4.0.0, @actions/http-client@npm:^4.0.0":
+"@actions/http-client@npm:4.0.1":
+  version: 4.0.1
+  resolution: "@actions/http-client@npm:4.0.1"
+  dependencies:
+    tunnel: ^0.0.6
+    undici: ^6.23.0
+  checksum: 45da4bacfd50dbd18cb77171e789242d77739d744e394f1cd65c0e8cbfee0d3176a264239e475fcad889a60ea180d74cdd985cb3dd1d3f9627ff69846929facd
+  languageName: node
+  linkType: hard
+
+"@actions/http-client@npm:^4.0.0":
   version: 4.0.0
   resolution: "@actions/http-client@npm:4.0.0"
   dependencies:
@@ -649,7 +659,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gatling-enterprise-runner/common@workspace:common"
   dependencies:
-    "@actions/http-client": 4.0.0
+    "@actions/http-client": 4.0.1
     date-fns: 4.1.0
     idonttrustlikethat: 2.1.2
   languageName: unknown
