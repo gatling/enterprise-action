@@ -660,7 +660,7 @@ __metadata:
   resolution: "@gatling-enterprise-runner/common@workspace:common"
   dependencies:
     "@actions/http-client": 4.0.1
-    date-fns: 4.1.0
+    date-fns: 4.3.0
     idonttrustlikethat: 2.1.2
   languageName: unknown
   linkType: soft
@@ -1883,10 +1883,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:4.1.0":
-  version: 4.1.0
-  resolution: "date-fns@npm:4.1.0"
-  checksum: fb681b242cccabed45494468f64282a7d375ea970e0adbcc5dcc92dcb7aba49b2081c2c9739d41bf71ce89ed68dd73bebfe06ca35129490704775d091895710b
+"date-fns@npm:4.3.0":
+  version: 4.3.0
+  resolution: "date-fns@npm:4.3.0"
+  checksum: 3e9a7e7674d9fa737a536f03331a90bda51e555e650ec43c44aa184579c65d3a5dfdfb6e830b10dd555324fb64091fefc320bd0cbc7fb37a3a358324a710bbb9
   languageName: node
   linkType: hard
 
