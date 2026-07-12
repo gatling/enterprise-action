@@ -27,7 +27,7 @@
     "@types/node": "24.13.3",
     "esbuild": "0.28.1",
     "jest": "30.4.2",
-    "js-yaml": "4.2.0",
+    "js-yaml": "5.2.1",
     "nock": "14.0.16",
     "prettier": "3.8.4",
     "rimraf": "6.1.3",
