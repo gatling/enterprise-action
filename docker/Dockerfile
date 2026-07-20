@@ -1,9 +1,14 @@
-FROM busybox:uclibc AS busybox
+FROM debian:trixie AS builder
+
+RUN apt-get update && apt-get install -y busybox
+RUN mkdir -p /tmp/usr/bin && \
+    for i in $(busybox --list); do ln -s busybox /tmp/usr/bin/$i; done && \
+    cp /usr/bin/busybox /tmp/usr/bin/
 
 FROM gcr.io/distroless/nodejs24-debian13:nonroot
 
-# We need to have a shell available for GitLab CI/CD
-COPY --from=busybox /bin/sh /bin/sh
+# We need a shell and some basic utilities (touch, chmod, mkdir, cat) for GitLab CI/CD
+COPY --from=builder /tmp/usr/bin /usr/bin
 
 USER nonroot:nonroot
 
