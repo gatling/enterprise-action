@@ -11,7 +11,9 @@ updates:
     ignore:
       # the major version for Node should match the runtime configured in action.yml
       - dependency-name: "@types/node"
-        update-types: [ "version-update:semver-major" ]
+        update-types: ["version-update:semver-major"]
+    cooldown:
+      default-days: 7
   - package-ecosystem: "github-actions"
     directory: "/"
     commit-message:
@@ -22,3 +24,5 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
+    cooldown:
+      default-days: 7
