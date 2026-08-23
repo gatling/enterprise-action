@@ -2988,14 +2988,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:5.2.1":
-  version: 5.2.1
-  resolution: "js-yaml@npm:5.2.1"
+"js-yaml@npm:5.3.0":
+  version: 5.3.0
+  resolution: "js-yaml@npm:5.3.0"
   dependencies:
     argparse: ^2.0.1
   bin:
     js-yaml: bin/js-yaml.mjs
-  checksum: 8cbefb87c31db3fc177ce5ecf92c072d124be9247f1164ea50cb446d56037d3f4c086a4167cd127f20bb2b4281d9c64d051a8e148f8f4c841c074d3b06492bcf
+  checksum: 7b2f946dab72b05ac0fa4b40daa6230044df06fa7a8a8c75944f4e7f644914960fc2f01e7a98d714d986126418cafab1b1b495fbad74f211df49e4818808db55
   languageName: node
   linkType: hard
 
@@ -3641,7 +3641,7 @@ __metadata:
     "@types/node": 24.13.3
     esbuild: 0.28.1
     jest: 30.4.2
-    js-yaml: 5.2.1
+    js-yaml: 5.3.0
     nock: 14.0.16
     prettier: 3.9.6
     rimraf: 6.1.3
