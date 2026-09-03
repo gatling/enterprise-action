@@ -6,6 +6,9 @@ on:
       - published
       - edited
 
+permissions:
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -52,8 +55,9 @@ jobs:
 
       - name: Compute Docker tags
         id: docker-tags
+        env:
+          full_version: ${{ github.event.release.tag_name }}
         run: |
-          full_version="${{ github.event.release.tag_name }}"
           full_version=${full_version//v/} # Remove 'v' prefix
           echo "full_version: $full_version"
           
