@@ -70,10 +70,17 @@ jobs:
           wait_for_run_end: ${{ inputs.wait_for_run_end }}
 
       - name: Print output
+        env:
+          RUN_ID: ${{ steps.enterprise-action.outputs.run_id }}
+          REPORTS_URL: ${{ steps.enterprise-action.outputs.reports_url }}
+          RUNS_URL: ${{ steps.enterprise-action.outputs.runs_url }}
+          RUN_STATUS_CODE: ${{ steps.enterprise-action.outputs.run_status_code }}
+          RUN_STATUS_NAME: ${{ steps.enterprise-action.outputs.run_status_name }}
+          RUN_ASSERTIONS: ${{ steps.enterprise-action.outputs.run_assertions }}
         run: |
-          echo "run_id=${{ steps.enterprise-action.outputs.run_id }}"
-          echo "reports_url=${{ steps.enterprise-action.outputs.reports_url }}"
-          echo "runs_url=${{ steps.enterprise-action.outputs.runs_url }}"
-          echo "run_status_code=${{ steps.enterprise-action.outputs.run_status_code }}"
-          echo "run_status_name=${{ steps.enterprise-action.outputs.run_status_name }}"
-          echo "run_assertions=${{ steps.enterprise-action.outputs.run_assertions }}"
+          echo "run_id=${RUN_ID}"
+          echo "reports_url=${REPORTS_URL}"
+          echo "runs_url=${RUNS_URL}"
+          echo "run_status_code=${RUN_STATUS_CODE}"
+          echo "run_status_name=${RUN_STATUS_NAME}"
+          echo "run_assertions=${RUN_ASSERTIONS}"
