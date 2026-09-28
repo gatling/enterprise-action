@@ -24,7 +24,7 @@
     "start-docker": "yarn run build-common && yarn run package-docker && yarn workspace '@gatling-enterprise-runner/docker' run start"
   },
   "devDependencies": {
-    "@types/node": "24.13.4",
+    "@types/node": "24.13.6",
     "esbuild": "0.28.2",
     "jest": "30.5.2",
     "js-yaml": "5.4.2",
