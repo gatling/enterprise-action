@@ -1416,12 +1416,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:24.13.6":
-  version: 24.13.6
-  resolution: "@types/node@npm:24.13.6"
+"@types/node@npm:24.19.0":
+  version: 24.19.0
+  resolution: "@types/node@npm:24.19.0"
   dependencies:
-    undici-types: ~7.18.0
-  checksum: 503acaddfe1fdbaf894c1d4be792d62f69b573fa70644f4d3bfd5e830f4071d9ec4dcc8d6394312e49e9b0acda41e8980fd921b07ab950c1fe70866a703f07d6
+    undici-types: ">=7.24.0 <7.24.7"
+  checksum: 17381039ae34c5a34fc78b28614c5ecc66bd7092df93a235ea74b77ffa313f0e757373d23f9567dfe7f1cdb52a94260583f7f654919ec086cf7fe19e60e30294
   languageName: node
   linkType: hard
 
@@ -3705,7 +3705,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
-    "@types/node": 24.13.6
+    "@types/node": 24.19.0
     esbuild: 0.28.2
     jest: 30.5.2
     js-yaml: 5.4.2
@@ -4120,6 +4120,13 @@ __metadata:
   bin:
     uglifyjs: bin/uglifyjs
   checksum: 7ed6272fba562eb6a3149cfd13cda662f115847865c03099e3995a0e7a910eba37b82d4fccf9e88271bb2bcbe505bb374967450f433c17fa27aa36d94a8d0553
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:>=7.24.0 <7.24.7":
+  version: 7.24.6
+  resolution: "undici-types@npm:7.24.6"
+  checksum: e79802e37dc472c6324850d938b5df6b9e796f6a1bb5f8ccd24f3a6d17eae94a9cc125506c8b339a3293ffbad81daeba30b843e564c1d237b3c8deafd98b6267
   languageName: node
   linkType: hard
 
