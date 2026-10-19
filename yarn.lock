@@ -1060,9 +1060,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.42.1":
-  version: 0.42.6
-  resolution: "@mswjs/interceptors@npm:0.42.6"
+"@mswjs/interceptors@npm:^0.44.0":
+  version: 0.44.0
+  resolution: "@mswjs/interceptors@npm:0.44.0"
   dependencies:
     "@open-draft/until": ^3.0.1
     "@types/debug": ^4.1.13
@@ -1070,7 +1070,7 @@ __metadata:
     is-node-process: ^1.2.0
     outvariant: ^1.4.3
     rettime: ^0.11.11
-  checksum: 899133d36edfd20cfab9925992534d87dcd2c963f41d93c71b28fe1250733dbd4738f709556cc9da22ee009b935a734bce4d0a410732f98fae153fc07613586e
+  checksum: 9e7ac0828a525be8b1b88b624d6ec90ff55c296aec13c8c347c71d94badb336732d9d4355a6637afbc265ef908971c945af077363eef5f9650203ce078e9b9d4
   languageName: node
   linkType: hard
 
@@ -3384,12 +3384,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:15.0.0-beta.14":
-  version: 15.0.0-beta.14
-  resolution: "nock@npm:15.0.0-beta.14"
+"nock@npm:15.0.1":
+  version: 15.0.1
+  resolution: "nock@npm:15.0.1"
   dependencies:
-    "@mswjs/interceptors": ^0.42.1
-  checksum: 63503b9f59843608544cf9b65b95fb5d06f6d5871598660dc50a65b8f775bcac1cda8f6e3903faef6116a40c211fca7df7df438f80eb4fca3419bd178484bb07
+    "@mswjs/interceptors": ^0.44.0
+  checksum: 876f059acbcbc0d836b343ed507fca291c20e54fc8356b7958280452f57bae46b2baa714caa7fb1e908f5a8f4c849491973ad95e2905b4469fb17d3a241fe376
   languageName: node
   linkType: hard
 
@@ -3709,7 +3709,7 @@ __metadata:
     esbuild: 0.28.2
     jest: 30.5.2
     js-yaml: 5.4.2
-    nock: 15.0.0-beta.14
+    nock: 15.0.1
     prettier: 3.9.9
     rimraf: 6.1.3
     ts-jest: 29.4.14
