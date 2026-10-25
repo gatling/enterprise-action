@@ -1416,12 +1416,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:24.19.0":
-  version: 24.19.0
-  resolution: "@types/node@npm:24.19.0"
+"@types/node@npm:24.19.2":
+  version: 24.19.2
+  resolution: "@types/node@npm:24.19.2"
   dependencies:
     undici-types: ">=7.24.0 <7.24.7"
-  checksum: 17381039ae34c5a34fc78b28614c5ecc66bd7092df93a235ea74b77ffa313f0e757373d23f9567dfe7f1cdb52a94260583f7f654919ec086cf7fe19e60e30294
+  checksum: 4afc94122d647e2c4bc794431632d07a67949d9674b73f13898e1f509de41862e841a07e16097965f18d36e93fc4b2c60ecf2304d8440694369e5282969c0481
   languageName: node
   linkType: hard
 
@@ -3705,7 +3705,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
-    "@types/node": 24.19.0
+    "@types/node": 24.19.2
     esbuild: 0.28.2
     jest: 30.5.2
     js-yaml: 5.4.2
