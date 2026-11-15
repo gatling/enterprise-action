@@ -1060,17 +1060,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.44.0":
-  version: 0.44.0
-  resolution: "@mswjs/interceptors@npm:0.44.0"
+"@mswjs/interceptors@npm:^0.45.11":
+  version: 0.45.12
+  resolution: "@mswjs/interceptors@npm:0.45.12"
   dependencies:
     "@open-draft/until": ^3.0.1
     "@types/debug": ^4.1.13
     debug: ^4.4.3
     is-node-process: ^1.2.0
     outvariant: ^1.4.3
-    rettime: ^0.11.11
-  checksum: 9e7ac0828a525be8b1b88b624d6ec90ff55c296aec13c8c347c71d94badb336732d9d4355a6637afbc265ef908971c945af077363eef5f9650203ce078e9b9d4
+    rettime: ^0.11.12
+  checksum: 298d114ea77974b85324ad6a5691483740ce389a913d37e1aab9e66bc23dc7ee1887d76d614a3f383e4da23856d4df663e6d521a483b8ea75aa313b27f5717dd
   languageName: node
   linkType: hard
 
@@ -3384,12 +3384,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:15.0.5":
-  version: 15.0.5
-  resolution: "nock@npm:15.0.5"
+"nock@npm:15.0.6":
+  version: 15.0.6
+  resolution: "nock@npm:15.0.6"
   dependencies:
-    "@mswjs/interceptors": ^0.44.0
-  checksum: 69b9bf58f57885725c782420eacb1e6cab2cb2d959e68a1283c43abb4135a6659a7be5c5cc887dbc0d05abf80ee77a17a46699de82db45f8f392223f6e0f1214
+    "@mswjs/interceptors": ^0.45.11
+  checksum: d1720077866a44764084cedc3e016f36298449d9db325b025c99eb284daefe1fce733844d7e19b7e327bf0d1106315643355c81deeb61f2ea37041c24fe79610
   languageName: node
   linkType: hard
 
@@ -3682,10 +3682,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rettime@npm:^0.11.11":
-  version: 0.11.11
-  resolution: "rettime@npm:0.11.11"
-  checksum: f1892e40db3644c02c605ba72fac18e80a78dd71f122455db4a5e0ba041134d857709a41ad7ce469b594534d3370bfd11e440265537ed83b6e469cfd634a3bf0
+"rettime@npm:^0.11.12":
+  version: 0.11.12
+  resolution: "rettime@npm:0.11.12"
+  checksum: a0213d6d3c84955b566f29e852d7490758d31df397e4dc0ac4f61c74a93ee530c4c129546477069ac9ba92977c8a0f827c7b833032ac2530eccc675795fbe0ba
   languageName: node
   linkType: hard
 
@@ -3709,7 +3709,7 @@ __metadata:
     esbuild: 0.28.2
     jest: 30.5.2
     js-yaml: 5.5.0
-    nock: 15.0.5
+    nock: 15.0.6
     prettier: 3.9.10
     rimraf: 6.1.3
     ts-jest: 29.4.15
